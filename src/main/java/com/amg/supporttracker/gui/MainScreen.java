@@ -14,6 +14,8 @@ import javax.swing.*;
  * @author Andrew Guillard
  */
 public class MainScreen extends JFrame {
+
+    CardLayout cardLayout;
     
     public MainScreen() {
         initComponents();
@@ -24,17 +26,19 @@ public class MainScreen extends JFrame {
 
     private void btnDashboardActionPerformed(ActionEvent e) {
         System.out.println("Dashboard button clicked");
+        cardLayout.show(contentPanel, "dashboardScreenCard");
         
     }
 
     private void btnPatronsActionPerformed(ActionEvent e) {
         System.out.println("Patron button clicked");
+        cardLayout.show(contentPanel, "patronScreenCard");
         //PatronScreen patronScreen = new PatronScreen(contentPanel);
     }
     
     private void btnDonationsActionPerformed(ActionEvent e) {
         System.out.println("Donation button clicked");
-        
+        cardLayout.show(contentPanel, "donationScreenCard");
     }
 
     private void initComponents() {
@@ -60,12 +64,6 @@ public class MainScreen extends JFrame {
 
         //======== buttonPanel ========
         {
-            buttonPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border.
-            EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing
-            . border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ),
-            java. awt. Color. red) ,buttonPanel. getBorder( )) ); buttonPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( )
-            { @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () ))
-            throw new RuntimeException( ); }} );
             buttonPanel.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
@@ -77,51 +75,44 @@ public class MainScreen extends JFrame {
 
             //---- btnDashboard ----
             btnDashboard.setText("Dashboard");
-            btnDashboard.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    btnDashboardActionPerformed(e);
-                }
-            });
+            btnDashboard.addActionListener(e -> btnDashboardActionPerformed(e));
             buttonPanel.add(btnDashboard, "cell 0 0");
 
             //---- btnPatrons ----
             btnPatrons.setText("Patrons");
-            btnPatrons.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    btnPatronsActionPerformed(e);
-                }
-            });
+            btnPatrons.addActionListener(e -> btnPatronsActionPerformed(e));
             buttonPanel.add(btnPatrons, "cell 0 1");
 
             //---- btnDonations ----
             btnDonations.setText("Donations");
-            btnDonations.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    btnDonationsActionPerformed(e);
-                }
-            });
+            btnDonations.addActionListener(e -> btnDonationsActionPerformed(e));
             buttonPanel.add(btnDonations, "cell 0 2");
         }
         contentPane.add(buttonPanel, "cell 0 1");
 
         //======== contentPanel ========
         {
-            contentPanel.setLayout(new MigLayout(
-                "hidemode 3",
-                // columns
-                "[fill]" +
-                "[fill]",
-                // rows
-                "[182]"));
+            contentPanel.setLayout(new CardLayout());
         }
-        contentPane.add(contentPanel, "cell 1 1 1 2");
+        contentPane.add(contentPanel, "cell 1 0 1 3");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
     
     private void initContentPanel() {
-        
+        this.cardLayout = (CardLayout) contentPanel.getLayout();
+
+        DashboardScreen dashboardScreen = new DashboardScreen(contentPanel.getSize());
+        contentPanel.add(dashboardScreen, "dashboardScreenCard");
+
+        PatronScreen patronScreen = new PatronScreen(contentPanel.getSize());
+        contentPanel.add(patronScreen, "patronScreenCard");
+
+        DonationScreen donationScreen = new DonationScreen(contentPanel.getSize());
+        contentPanel.add(donationScreen, "donationScreenCard");
+
+
     }
     
     

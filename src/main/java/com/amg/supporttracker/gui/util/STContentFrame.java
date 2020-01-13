@@ -4,12 +4,12 @@ import com.amg.supporttracker.gui.MainScreen;
 
 import javax.swing.*;
 
-public class STContentPanel extends JPanel {
+public class STContentFrame extends JFrame {
     
     MainScreen mainScreen;
     JFrame activeScreen;
     
-    public STContentPanel(MainScreen main){
+    public STContentFrame(MainScreen main){
         this.mainScreen = main;
     }
     
