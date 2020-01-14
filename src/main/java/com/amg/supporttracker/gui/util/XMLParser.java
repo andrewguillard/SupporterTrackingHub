@@ -46,6 +46,7 @@ public class XMLParser {
             Element rootElement = document.createElement("patrons");
             document.appendChild(rootElement);
 
+            //TODO: Add string getters to PatronDTO
             for(PatronDTO patron : patrons){
                 patronId =      String.valueOf(patron.getPatronId());
                 patronName =    patron.getPatronName() != null ? patron.getPatronName() : "";
