@@ -6,14 +6,11 @@ package com.amg.supporttracker.gui;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 
-import com.amg.supporttracker.gui.util.JSONParser;
-import com.amg.supporttracker.gui.util.STTable;
+import com.amg.supporttracker.gui.util.XMLParser;
 
 import com.amg.supporttracker.gui.util.STUtil;
 import com.amg.supporttracker.gui.util.dto.PatronDTO;
@@ -46,7 +43,7 @@ public class PatronScreen extends JPanel {
     }
 
     private void loadData(){
-        JSONParser parser = new JSONParser();
+        XMLParser parser = new XMLParser();
         //TODO: Actually call the data from the thing
         //ArrayList<PatronDTO> loadedPatrons = parser.loadPatrons("patrons.json");
 
@@ -62,6 +59,8 @@ public class PatronScreen extends JPanel {
         loadedPatrons.add(patron3);
         loadedPatrons.add(patron4);
         loadedPatrons.add(patron5);
+
+        XMLParser.writePatronsFile(loadedPatrons);
 
         for(PatronDTO patron : loadedPatrons){
             System.out.println("Adding Patron: "+patron.getPatronName());

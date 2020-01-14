@@ -20,6 +20,7 @@ public class MainScreen extends JFrame {
     public MainScreen() {
         initComponents();
         initContentPanel();
+        setColors();
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -64,31 +65,40 @@ public class MainScreen extends JFrame {
 
         //======== buttonPanel ========
         {
+            buttonPanel.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new
+            javax . swing. border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JFor\u006dDesi\u0067ner \u0045valu\u0061tion" , javax
+            . swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java
+            . awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt
+            . Color .red ) ,buttonPanel. getBorder () ) ); buttonPanel. addPropertyChangeListener( new java. beans .
+            PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "bord\u0065r" .
+            equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
             buttonPanel.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
                 "[218,fill]",
                 // rows
+                "[199,grow]" +
                 "[40,shrink 0,fill]" +
                 "[40,fill]" +
-                "[40,fill]"));
+                "[40,fill]" +
+                "[190,grow]"));
 
             //---- btnDashboard ----
             btnDashboard.setText("Dashboard");
             btnDashboard.addActionListener(e -> btnDashboardActionPerformed(e));
-            buttonPanel.add(btnDashboard, "cell 0 0");
+            buttonPanel.add(btnDashboard, "cell 0 1");
 
             //---- btnPatrons ----
             btnPatrons.setText("Patrons");
             btnPatrons.addActionListener(e -> btnPatronsActionPerformed(e));
-            buttonPanel.add(btnPatrons, "cell 0 1");
+            buttonPanel.add(btnPatrons, "cell 0 2");
 
             //---- btnDonations ----
             btnDonations.setText("Donations");
             btnDonations.addActionListener(e -> btnDonationsActionPerformed(e));
-            buttonPanel.add(btnDonations, "cell 0 2");
+            buttonPanel.add(btnDonations, "cell 0 3");
         }
-        contentPane.add(buttonPanel, "cell 0 1");
+        contentPane.add(buttonPanel, "cell 0 0 1 3");
 
         //======== contentPanel ========
         {
@@ -113,6 +123,11 @@ public class MainScreen extends JFrame {
         contentPanel.add(donationScreen, "donationScreenCard");
 
 
+    }
+
+    private void setColors(){
+        buttonPanel.setBackground(new Color(250,126,0));
+        contentPanel.setBackground(new Color(77,77,77));
     }
     
     
