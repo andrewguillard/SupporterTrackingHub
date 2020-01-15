@@ -26,10 +26,74 @@ public class XMLParser {
     private static String donationsFilePath = "donations.xml";
     private static String configFilePath = "config.xml";
 
-    public ArrayList<PatronDTO> readPatronsFile(){
+    //Read patrons file and return an array of PatronDTOs
+    public static ArrayList<PatronDTO> readPatronsFile(){
         ArrayList<PatronDTO> patrons = new ArrayList<>();
-        File file = new File("patrons.xml");
 
+        try {
+            System.out.println("Reading Patrons File");
+            File patronsFile = new File(patronsFilePath);
+            boolean fileExists = patronsFile.exists();
+            Document document;
+
+            //If the file doesnt exist, exit..
+            if(!fileExists) {
+                System.out.println("File not found. Aborting read.");
+                return patrons;
+            }
+            
+            try {
+                document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(patronsFile);
+                document.getDocumentElement().normalize();
+            } catch(Exception ex){
+                System.out.println("Parse failure on Read. Aborting read.");
+                ex.printStackTrace();
+                return patrons;
+            }
+
+            //If the root node doesnt exist, abort. 
+            NodeList rootNode = document.getElementsByTagName("patrons");
+            if(rootNode == null || rootNode.getLength() < 1){
+                System.out.println("Root node not found. Aborting read.");
+                return patrons;
+            }
+
+            Element rootElement = (Element) rootNode.item(0);
+            Element patronElement;
+            NodeList patronNodes = rootElement.getElementsByTagName("patron");
+            PatronDTO newPatron;
+            
+            for(int i = 0; i < patronNodes.getLength(); i++){
+                //SEARCH FOR PATRON
+                if(patronNodes.item(i) != null){
+                    newPatron = new PatronDTO();
+                    try {
+                        //Get ID
+                        patronElement = (Element) patronNodes.item(i);
+                        newPatron.setPatronId(Integer.parseInt(patronElement.getAttribute("id")));
+                        System.out.println("Reading Patron ID: " + newPatron.getPatronId() + " found. Updating record.");
+
+                        //Get Basic Elements
+                        newPatron.setPatronName(readBasicElement(patronElement, "patronName"));
+                        newPatron.setFriendlyName(readBasicElement(patronElement, "friendlyName"));
+                        newPatron.setDiscordName(readBasicElement(patronElement, "discordName"));
+                        newPatron.setTierNum(Integer.parseInt(readBasicElement(patronElement, "tier")));
+                        newPatron.setPledgeAmount(Double.parseDouble(readBasicElement(patronElement, "pledge")));
+                        newPatron.setTotalAmount(Double.parseDouble(readBasicElement(patronElement, "totalAmount")));
+                        newPatron.setPledgeDate(STUtil.formatStringToDate(readBasicElement(patronElement, "pledgeDate"), STStandard.XML_DATE_FORMAT));
+                        newPatron.setDeclineDate(STUtil.formatStringToDate(readBasicElement(patronElement, "declineDate"), STStandard.XML_DATE_FORMAT));
+                        newPatron.setSource(readBasicElement(patronElement, "source"));
+                    } catch(Exception ex){
+                        System.out.println("Setting Patron values failed. Adding incomplete patron. Please contact developer to resolve this.");
+                        ex.printStackTrace();
+                    }
+                    
+                    patrons.add(newPatron);
+                } 
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
         return patrons;
     }
 
@@ -72,7 +136,6 @@ public class XMLParser {
             //If the root node exists, use it. If not, create it!
             Element rootElement;
             NodeList rootNode = document.getElementsByTagName("patrons");
-            int length = rootNode.getLength();
             if(rootNode != null && rootNode.getLength() > 0){
                 rootElement = (Element) rootNode.item(0);
             } else{
@@ -82,7 +145,7 @@ public class XMLParser {
 
             //Convert patrons to a hashmap for easy searching
             HashMap<Integer, Element> existingPatronsMap = new HashMap<>();
-            NodeList patronNodes = document.getElementsByTagName("patron");
+            NodeList patronNodes = rootElement.getElementsByTagName("patron");
             Element element;
             for(int i = 0; i < patronNodes.getLength(); i++){
                 element = (Element) patronNodes.item(i);
@@ -91,7 +154,6 @@ public class XMLParser {
 
             Element patronElement;
             for(PatronDTO patron : patrons){
-
                 //SEARCH FOR PATRON
                 if(existingPatronsMap.get(patron.getPatronId()) != null){
                     System.out.println("Patron ID: " + patron.getPatronIdString() + " found. Updating record.");
@@ -101,14 +163,12 @@ public class XMLParser {
                     updateBasicElement(document, patronElement, "tier", patron.getTierNumString());
                     updateBasicElement(document, patronElement, "pledge", patron.getPledgeAmountString());
                     updateBasicElement(document, patronElement, "totalAmount", patron.getTotalAmountString());
-                    updateBasicElement(document, patronElement, "pledgeDate", patron.getPledgeDateString());
-                    updateBasicElement(document, patronElement, "declineDate", patron.getDeclineDateString());
+                    updateBasicElement(document, patronElement, "pledgeDate", patron.getPledgeDateStringXml());
+                    updateBasicElement(document, patronElement, "declineDate", patron.getDeclineDateStringXml());
                     updateBasicElement(document, patronElement, "source", patron.getSourceString());
-
                 } else {
                     //ADD NEW PATRON
                     System.out.println("Patron ID: " + patron.getPatronIdString() + " not found. Adding record.");
-
                     //main patron element + id attribute
                     patronElement = document.createElement("patron");
                     rootElement.appendChild(patronElement);
@@ -124,17 +184,15 @@ public class XMLParser {
                     patronElement.appendChild(createBasicElement(document, "tier", patron.getTierNumString()));
                     patronElement.appendChild(createBasicElement(document, "pledge", patron.getPledgeAmountString()));
                     patronElement.appendChild(createBasicElement(document, "totalAmount", patron.getTotalAmountString()));
-                    patronElement.appendChild(createBasicElement(document, "pledgeDate", patron.getPledgeDateString()));
-                    patronElement.appendChild(createBasicElement(document, "declineDate", patron.getDeclineDateString()));
+                    patronElement.appendChild(createBasicElement(document, "pledgeDate", patron.getPledgeDateStringXml()));
+                    patronElement.appendChild(createBasicElement(document, "declineDate", patron.getDeclineDateStringXml()));
                     patronElement.appendChild(createBasicElement(document, "source", patron.getSourceString()));
                 }
             }
 
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            Transformer transformer = createTransformer();
             DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new File("patrons.xml"));
+            StreamResult result = new StreamResult(patronsFile);
             transformer.transform(source, result);
         } catch (Exception ex){
             ex.printStackTrace();
@@ -169,6 +227,32 @@ public class XMLParser {
             }
         } else{
             parentElement.appendChild(createBasicElement(doc, elementName, elementValue));
+        }
+    }
+
+    //Read a basic element given a parent element and the element name.
+    private static String readBasicElement(Element parentElement, String elementName) {
+        NodeList nodes = parentElement.getElementsByTagName(elementName);
+        Node node = nodes.item(0);
+
+        if (node == null || node.getFirstChild() == null) {
+            return "";
+        } else {
+            return node.getFirstChild().getNodeValue();
+        }
+    }
+    
+    private static Transformer createTransformer(){
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            //Indent output so it looks pretty
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            return transformer;
+        } catch(Exception e){
+            System.out.println("Error creating XML Transformer. Stack Trace:");
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.amg.supporttracker.gui.util.dto;
 
+import com.amg.supporttracker.gui.util.STStandard;
 import com.amg.supporttracker.gui.util.STUtil;
 
 import java.util.Date;
@@ -125,7 +126,12 @@ public class PatronDTO {
 
     //Return pledgeDate as a string
     public String getPledgeDateString() {
-        return STUtil.formatDate(pledgeDate, "mm/dd/yyyy");
+        return STUtil.formatDateToString(pledgeDate, STStandard.TABLE_DATE_FORMAT);
+    }
+
+    //Return pledgeDate as a string for XML
+    public String getPledgeDateStringXml() {
+        return STUtil.formatDateToString(pledgeDate, STStandard.XML_DATE_FORMAT);
     }
 
     public void setPledgeDate(Date pledgeDate) {
@@ -138,7 +144,12 @@ public class PatronDTO {
 
     //Return declineDate as a string
     public String getDeclineDateString() {
-        return STUtil.formatDate(declineDate, "mm/dd/yyyy");
+        return STUtil.formatDateToString(declineDate, STStandard.TABLE_DATE_FORMAT);
+    }
+
+    //Return declineDate as a string for XML
+    public String getDeclineDateStringXml() {
+        return STUtil.formatDateToString(declineDate, STStandard.XML_DATE_FORMAT);
     }
 
     public void setDeclineDate(Date declineDate) {

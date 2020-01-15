@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.amg.supporttracker.gui.util.STStandard;
 import com.amg.supporttracker.gui.util.XMLParser;
 
 import com.amg.supporttracker.gui.util.STUtil;
@@ -43,30 +44,29 @@ public class PatronScreen extends JPanel {
     }
 
     private void loadData(){
-        XMLParser parser = new XMLParser();
         //TODO: Actually call the data from the thing
-        //ArrayList<PatronDTO> loadedPatrons = parser.loadPatrons("patrons.json");
+        ArrayList<PatronDTO> loadedPatrons = XMLParser.readPatronsFile();
 
-        //TESTING...
-        loadedPatrons = new ArrayList<>();
-        PatronDTO patron1 = new PatronDTO(1, "Andrew", 1, 1, new Date());
-        PatronDTO patron2 = new PatronDTO(2, "Billy", 2, 4, new Date());
-        PatronDTO patron3 = new PatronDTO(3, "Alice", 1, 1, new Date());
-        PatronDTO patron4 = new PatronDTO(4, "Joe", 3, 15, new Date());
-        PatronDTO patron5 = new PatronDTO(5, "God", 4, 100, new Date());
-        PatronDTO patron6 = new PatronDTO(6, "Lol", 40, 1000, new Date());
-        loadedPatrons.add(patron1);
-        loadedPatrons.add(patron2);
-        loadedPatrons.add(patron3);
-        loadedPatrons.add(patron4);
-        loadedPatrons.add(patron5);
-        loadedPatrons.add(patron6);
+//        //TESTING...
+//        loadedPatrons = new ArrayList<>();
+//        PatronDTO patron1 = new PatronDTO(3, "Andrew3", 1, 100.9, new Date());
+//        PatronDTO patron2 = new PatronDTO(2, "Billy", 2, 4, new Date());
+//        PatronDTO patron3 = new PatronDTO(3, "Alice", 1, 1, new Date());
+//        PatronDTO patron4 = new PatronDTO(4, "Joe", 3, 15, new Date());
+//        PatronDTO patron5 = new PatronDTO(5, "God", 4, 100, new Date());
+//        PatronDTO patron6 = new PatronDTO(6, "Lol", 40, 1000, new Date());
+//        loadedPatrons.add(patron1);
+//        loadedPatrons.add(patron2);
+//        loadedPatrons.add(patron3);
+//        loadedPatrons.add(patron4);
+//        loadedPatrons.add(patron5);
+//        loadedPatrons.add(patron6);
 
         XMLParser.writePatronsFile(loadedPatrons);
 
         for(PatronDTO patron : loadedPatrons){
             System.out.println("Adding Patron: "+patron.getPatronName());
-            tableModel.addRow(new Object[]{patron.getPatronName(), patron.getTierNum(), patron.getPledgeAmount(), STUtil.formatDate(patron.getPledgeDate(), "MM-dd-yyyy")});
+            tableModel.addRow(new Object[]{patron.getPatronName(), patron.getTierNum(), patron.getPledgeAmount(), STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT)});
         }
     }
 
