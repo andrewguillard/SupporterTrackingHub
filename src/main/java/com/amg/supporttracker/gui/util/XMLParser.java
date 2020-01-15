@@ -25,6 +25,10 @@ public class XMLParser {
     private static String patronsFilePath = "patrons.xml";
     private static String donationsFilePath = "donations.xml";
     private static String configFilePath = "config.xml";
+    
+    //TODO: Implement this in read and write
+    private int maxPatronUserId = 0; //Stores the maximum user id found in the app. This is how we add new ones with unique id.
+    private int maxDonationUserId = 0; //Stores the maximum user id found in the app. This is how we add new ones with unique id.
 
     //Read patrons file and return an array of PatronDTOs
     public static ArrayList<PatronDTO> readPatronsFile(){

@@ -45,7 +45,7 @@ public class PatronScreen extends JPanel {
 
     private void loadData(){
         //TODO: Actually call the data from the thing
-        ArrayList<PatronDTO> loadedPatrons = XMLParser.readPatronsFile();
+        this.loadedPatrons = XMLParser.readPatronsFile();
 
 //        //TESTING...
 //        loadedPatrons = new ArrayList<>();
@@ -62,12 +62,22 @@ public class PatronScreen extends JPanel {
 //        loadedPatrons.add(patron5);
 //        loadedPatrons.add(patron6);
 
-        XMLParser.writePatronsFile(loadedPatrons);
-
         for(PatronDTO patron : loadedPatrons){
             System.out.println("Adding Patron: "+patron.getPatronName());
             tableModel.addRow(new Object[]{patron.getPatronName(), patron.getTierNum(), patron.getPledgeAmount(), STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT)});
         }
+    }
+    
+    //TODO: Make an XML Parser to just add a patron. Not search through all of them. 
+    public void addPatron(PatronDTO patron){
+        loadedPatrons.add(patron);
+        tableModel.addRow(new Object[]{patron.getPatronName(), patron.getTierNum(), patron.getPledgeAmount(), STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT)});
+        XMLParser.writePatronsFile(loadedPatrons);
+    }
+    
+    public void saveData(ArrayList<PatronDTO> patrons){
+        //validate? Maybe? idk
+        XMLParser.writePatronsFile(patrons);
     }
 
     public ArrayList<String> getHeaderNames(){

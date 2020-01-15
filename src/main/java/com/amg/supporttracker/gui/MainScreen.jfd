@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.0.6.255" Java: "1.8.0_202-release" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.6.255" Java: "11.0.5" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -12,7 +12,7 @@ new FormModel {
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 				"$layoutConstraints": "hidemode 3"
 				"$columnConstraints": "[218,fill]"
-				"$rowConstraints": "[199,grow][40,shrink 0,fill][40,fill][40,fill][190,grow]"
+				"$rowConstraints": "[199,grow][40,shrink 0,fill][40,fill][40,fill][][190,grow]"
 			} ) {
 				name: "buttonPanel"
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -35,6 +35,13 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDonationsActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 3"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnDevAddPatron"
+					"text": "DEV - Add Patron"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDevAddPatronActionPerformed", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 0 4"
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0 1 3"
