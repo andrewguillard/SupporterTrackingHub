@@ -5,3 +5,4 @@
 *.idea/*
 /src/main/java/META-INF/MANIFEST.MF
 /target/SupportTracker-0.0.1-shaded.pom
+/target/classes/META-INF/SupporterTrackingHub.kotlin_module

@@ -1,5 +1,9 @@
 package com.amg.supporttracker.gui.util;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,5 +50,20 @@ public class STUtil {
         return NumberFormat.getCurrencyInstance(locale).format(amount);
     }
     
-    
+    //Use an object, a variable name, and an addon to get the result of a getter method in the object.
+    public static Object invokeGetter(Object obj, String varName, String addon){
+        Object value;
+        String var = varName + addon;
+        try{
+            value = new PropertyDescriptor(var, obj.getClass(), "get" + Character.toUpperCase(var.charAt(0)) + var.substring(1), null).getReadMethod().invoke(obj);
+            return value;
+        } catch (IntrospectionException ie){
+            ie.printStackTrace();
+        } catch (IllegalAccessException iae){
+            iae.printStackTrace();
+        } catch(InvocationTargetException ite){
+            ite.printStackTrace();
+        }
+        return null;
+    }
 }

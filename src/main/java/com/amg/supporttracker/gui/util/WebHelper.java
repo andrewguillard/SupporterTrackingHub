@@ -1,19 +1,18 @@
 package com.amg.supporttracker.gui.util;
 
 import com.amg.supporttracker.gui.util.dto.PatronDTO;
+import com.sun.deploy.config.ClientConfig;
+//import org.apache.http.client.HttpClient;
 
-import java.util.ArrayList;
-
-public class PatreonIntegrationHelper {
+public class WebHelper {
 
     //Jesus christ, so we're doing this?
 
     private String patreonUsername;
     private String patreonPassword;
 
-    public PatreonIntegrationHelper(String user, String pass){
-        this.patreonUsername = user;
-        this.patreonPassword = pass;
+    public WebHelper(){
+//        HttpClien
     }
 
 //    public ArrayList<PatronDTO> fetchPatreonInformation(){

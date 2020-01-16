@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import com.amg.supporttracker.gui.util.*;
 
 import com.amg.supporttracker.gui.util.STStandard;
 import com.amg.supporttracker.gui.util.XMLParser;
@@ -22,32 +23,30 @@ import net.miginfocom.swing.*;
 public class PatronScreen extends JPanel {
 
     private ArrayList<PatronDTO> loadedPatrons;
-    private DefaultTableModel tableModel;
+    private ArrayList<STTableHeader> headers;
 
     public PatronScreen(Dimension dim) {
+        loadData();
+        this.headers = generateHeaders();
         initComponents();
         this.setSize(dim);
         textField1.setText("Patron");
 
         loadUI();
-        loadData();
     }
 
     private void loadUI(){
         //Create table headers
-        tableModel = new DefaultTableModel();
-        for(String header : getHeaderNames()){
-            tableModel.addColumn(header);
-        }
-        patronTable.setModel(tableModel);
+        patronTable.setHeaders(headers);
+        patronTable.setTableData(loadedPatrons);
     }
 
     private void loadData(){
         this.loadedPatrons = XMLParser.readPatronsFile();
-        for(PatronDTO patron : loadedPatrons){
-            System.out.println("Adding Patron: "+patron.getPatronName());
-            insertPatronToTable(patron);
-        }
+//        for(PatronDTO patron : loadedPatrons){
+//            System.out.println("Adding Patron: "+patron.getPatronName());
+//            insertPatronToTable(patron);
+//        }
     }
     
     //TODO: Make an XML Parser to just add a patron. Not search through all of them. 
@@ -62,34 +61,35 @@ public class PatronScreen extends JPanel {
         XMLParser.writePatronsFile(patrons);
     }
 
-    public ArrayList<String> getHeaderNames(){
-        ArrayList<String> headers = new ArrayList<>();
-        headers.add("Patron Name");
-        headers.add("Friendly Name");
-        headers.add("Discord Name");
-        headers.add("Tier");
-        headers.add("Pledge Amount");
-        headers.add("Total Amount");
-        headers.add("Pledge Date");
-        headers.add("Decline Date");
-        headers.add("Source");
+    public ArrayList<STTableHeader> generateHeaders(){
+        ArrayList<STTableHeader> headers = new ArrayList<>();
+        headers.add(new STTableHeader("patronName", "Patron Name"));
+        headers.add(new STTableHeader("friendlyName", "Friendly Name"));
+        headers.add(new STTableHeader("discordName", "Discord Name"));
+        headers.add(new STTableHeader("tierNum", "Tier"));
+        headers.add(new STTableHeader("pledgeAmount", "Pledge Amount"));
+        headers.add(new STTableHeader("totalAmount", "Total Amount"));
+        headers.add(new STTableHeader("pledgeDate", "Pledge Date"));
+        headers.add(new STTableHeader("declineDate", "Decline Date"));
+        headers.add(new STTableHeader("source", "Source"));
 
         return headers;
     }
 
     //Insert a patron (from PatronDTO) to the table
+    //TODO: Reimplement this function
     public void insertPatronToTable(PatronDTO patron){
-        tableModel.addRow(new Object[]{
-                patron.getPatronName(),
-                patron.getFriendlyName(),
-                patron.getDiscordName(),
-                patron.getTierNum(),
-                STUtil.formatCurrency(patron.getPledgeAmount()),
-                STUtil.formatCurrency(patron.getTotalAmount()),
-                STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT),
-                STUtil.formatDateToString(patron.getDeclineDate(), STStandard.TABLE_DATE_FORMAT),
-                patron.getSource(),
-        });
+//        tableModel.addRow(new Object[]{
+//                patron.getPatronName(),
+//                patron.getFriendlyName(),
+//                patron.getDiscordName(),
+//                patron.getTierNum(),
+//                STUtil.formatCurrency(patron.getPledgeAmount()),
+//                STUtil.formatCurrency(patron.getTotalAmount()),
+//                STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT),
+//                STUtil.formatDateToString(patron.getDeclineDate(), STStandard.TABLE_DATE_FORMAT),
+//                patron.getSource(),
+//        });
     }
 
     private void initComponents() {
@@ -98,15 +98,16 @@ public class PatronScreen extends JPanel {
         panel1 = new JPanel();
         textField1 = new JTextField();
         patronScrollPane = new JScrollPane();
-        patronTable = new JTable();
+        patronTable = new STTable(null, this.headers);
 
         //======== this ========
-        setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.
-        border.EmptyBorder(0,0,0,0), "JF\u006frmDes\u0069gner \u0045valua\u0074ion",javax.swing.border.TitledBorder.CENTER
-        ,javax.swing.border.TitledBorder.BOTTOM,new java.awt.Font("D\u0069alog",java.awt.Font
-        .BOLD,12),java.awt.Color.red), getBorder())); addPropertyChangeListener(
-        new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062order"
-        .equals(e.getPropertyName()))throw new RuntimeException();}});
+        setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.
+        swing.border.EmptyBorder(0,0,0,0), "JFor\u006dDesi\u0067ner \u0045valu\u0061tion",javax.swing.border
+        .TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog"
+        ,java.awt.Font.BOLD,12),java.awt.Color.red), getBorder
+        ())); addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java
+        .beans.PropertyChangeEvent e){if("bord\u0065r".equals(e.getPropertyName()))throw new RuntimeException
+        ();}});
         setLayout(new MigLayout(
             "insets 0,hidemode 3,gap 0 0",
             // columns
@@ -146,6 +147,6 @@ public class PatronScreen extends JPanel {
     private JPanel panel1;
     private JTextField textField1;
     private JScrollPane patronScrollPane;
-    private JTable patronTable;
+    private STTable patronTable;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
