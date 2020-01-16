@@ -1,23 +1,25 @@
-JFDML JFormDesigner: "7.0.0.6.255" Java: "11.0.5" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.6.255" Java: "1.8.0_202-release" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 			"$layoutConstraints": "hidemode 3"
-			"$columnConstraints": "[168,fill][682,fill]"
-			"$rowConstraints": "[41][153,top][254,grow]"
+			"$columnConstraints": "0[185,fill]0[682,grow,fill]0"
+			"$rowConstraints": "0[254,growprio 50,grow,fill]0"
 		} ) {
-			name: "this"
+			name: "mainPanel"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 				"$layoutConstraints": "hidemode 3"
-				"$columnConstraints": "[218,fill]"
-				"$rowConstraints": "[199,grow][40,shrink 0,fill][40,fill][40,fill][][190,grow]"
+				"$columnConstraints": "0[218,fill]0"
+				"$rowConstraints": "[]0[50,shrinkprio 50,sizegroup 1,fill]0[50,shrinkprio 50,sizegroup 1,fill]0[40,shrinkprio 50,sizegroup 1,fill]0[shrinkprio 50,sizegroup 1]0[190,growprio 60,grow,fill]0"
 			} ) {
 				name: "buttonPanel"
+				"background": new java.awt.Color( 255, 102, 0, 255 )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnDashboard"
 					"text": "Dashboard"
+					"background": new java.awt.Color( 255, 102, 0, 255 )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDashboardActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 1"
@@ -25,6 +27,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnPatrons"
 					"text": "Patrons"
+					"background": new java.awt.Color( 255, 102, 0, 255 )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnPatronsActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 2"
@@ -32,6 +35,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnDonations"
 					"text": "Donations"
+					"background": new java.awt.Color( 255, 102, 0, 255 )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDonationsActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 3"
@@ -39,17 +43,18 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnDevAddPatron"
 					"text": "DEV - Add Patron"
+					"background": new java.awt.Color( 255, 102, 0, 255 )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDevAddPatronActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 4"
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 0 1 3"
+				"value": "cell 0 0"
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.CardLayout ) ) {
 				name: "contentPanel"
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 0 1 3"
+				"value": "cell 1 0"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

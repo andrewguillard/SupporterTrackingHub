@@ -6,7 +6,6 @@ package com.amg.supporttracker.gui;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,35 +43,18 @@ public class PatronScreen extends JPanel {
     }
 
     private void loadData(){
-        //TODO: Actually call the data from the thing
         this.loadedPatrons = XMLParser.readPatronsFile();
-
-//        //TESTING...
-//        loadedPatrons = new ArrayList<>();
-//        PatronDTO patron1 = new PatronDTO(3, "Andrew3", 1, 100.9, new Date());
-//        PatronDTO patron2 = new PatronDTO(2, "Billy", 2, 4, new Date());
-//        PatronDTO patron3 = new PatronDTO(3, "Alice", 1, 1, new Date());
-//        PatronDTO patron4 = new PatronDTO(4, "Joe", 3, 15, new Date());
-//        PatronDTO patron5 = new PatronDTO(5, "God", 4, 100, new Date());
-//        PatronDTO patron6 = new PatronDTO(6, "Lol", 40, 1000, new Date());
-//        loadedPatrons.add(patron1);
-//        loadedPatrons.add(patron2);
-//        loadedPatrons.add(patron3);
-//        loadedPatrons.add(patron4);
-//        loadedPatrons.add(patron5);
-//        loadedPatrons.add(patron6);
-
         for(PatronDTO patron : loadedPatrons){
             System.out.println("Adding Patron: "+patron.getPatronName());
-            tableModel.addRow(new Object[]{patron.getPatronName(), patron.getTierNum(), patron.getPledgeAmount(), STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT)});
+            insertPatronToTable(patron);
         }
     }
     
     //TODO: Make an XML Parser to just add a patron. Not search through all of them. 
     public void addPatron(PatronDTO patron){
         loadedPatrons.add(patron);
-        tableModel.addRow(new Object[]{patron.getPatronName(), patron.getTierNum(), patron.getPledgeAmount(), STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT)});
-        XMLParser.writePatronsFile(loadedPatrons);
+        insertPatronToTable(patron);
+        saveData(loadedPatrons);
     }
     
     public void saveData(ArrayList<PatronDTO> patrons){
@@ -83,11 +65,31 @@ public class PatronScreen extends JPanel {
     public ArrayList<String> getHeaderNames(){
         ArrayList<String> headers = new ArrayList<>();
         headers.add("Patron Name");
+        headers.add("Friendly Name");
+        headers.add("Discord Name");
         headers.add("Tier");
         headers.add("Pledge Amount");
+        headers.add("Total Amount");
         headers.add("Pledge Date");
+        headers.add("Decline Date");
+        headers.add("Source");
 
         return headers;
+    }
+
+    //Insert a patron (from PatronDTO) to the table
+    public void insertPatronToTable(PatronDTO patron){
+        tableModel.addRow(new Object[]{
+                patron.getPatronName(),
+                patron.getFriendlyName(),
+                patron.getDiscordName(),
+                patron.getTierNum(),
+                STUtil.formatCurrency(patron.getPledgeAmount()),
+                STUtil.formatCurrency(patron.getTotalAmount()),
+                STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT),
+                STUtil.formatDateToString(patron.getDeclineDate(), STStandard.TABLE_DATE_FORMAT),
+                patron.getSource(),
+        });
     }
 
     private void initComponents() {

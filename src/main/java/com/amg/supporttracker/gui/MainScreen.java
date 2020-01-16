@@ -5,15 +5,18 @@
 package com.amg.supporttracker.gui;
 
 import java.awt.event.*;
+
+import com.amg.supporttracker.gui.util.STStandard;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 /**
  * @author Andrew Guillard
  */
-public class MainScreen extends JFrame {
+public class MainScreen {
 
     CardLayout cardLayout;
     PatronScreen patronScreen;
@@ -22,8 +25,9 @@ public class MainScreen extends JFrame {
         initComponents();
         initContentPanel();
         setColors();
-        this.setVisible(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.setVisible(true);
+        mainPanel.setSize(new Dimension(800,500));
+        mainPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void btnDashboardActionPerformed(ActionEvent e) {
@@ -49,9 +53,14 @@ public class MainScreen extends JFrame {
         addPatron.setVisible(true);
     }
 
+    private void btnExitActionPerformed(ActionEvent e) {
+        mainPanel.dispose();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Andrew Guillard
+        mainPanel = new JFrame();
         buttonPanel = new JPanel();
         btnDashboard = new JButton();
         btnPatrons = new JButton();
@@ -59,67 +68,71 @@ public class MainScreen extends JFrame {
         btnDevAddPatron = new JButton();
         contentPanel = new JPanel();
 
-        //======== this ========
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new MigLayout(
-            "hidemode 3",
-            // columns
-            "[168,fill]" +
-            "[682,fill]",
-            // rows
-            "[41]" +
-            "[153,top]" +
-            "[254,grow]"));
-
-        //======== buttonPanel ========
+        //======== mainPanel ========
         {
-            buttonPanel.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder
-            (0,0,0,0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e",javax.swing.border.TitledBorder.CENTER,javax.swing.border
-            .TitledBorder.BOTTOM,new java.awt.Font("D\u0069al\u006fg",java.awt.Font.BOLD,12),java.awt
-            .Color.red),buttonPanel. getBorder()));buttonPanel. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void
-            propertyChange(java.beans.PropertyChangeEvent e){if("\u0062or\u0064er".equals(e.getPropertyName()))throw new RuntimeException()
-            ;}});
-            buttonPanel.setLayout(new MigLayout(
+            Container mainPanelContentPane = mainPanel.getContentPane();
+            mainPanelContentPane.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
-                "[218,fill]",
+                "0[185,fill]0" +
+                "[682,grow,fill]0",
                 // rows
-                "[199,grow]" +
-                "[40,shrink 0,fill]" +
-                "[40,fill]" +
-                "[40,fill]" +
-                "[]" +
-                "[190,grow]"));
+                "0[254,growprio 50,grow,fill]0"));
 
-            //---- btnDashboard ----
-            btnDashboard.setText("Dashboard");
-            btnDashboard.addActionListener(e -> btnDashboardActionPerformed(e));
-            buttonPanel.add(btnDashboard, "cell 0 1");
+            //======== buttonPanel ========
+            {
+                buttonPanel.setBackground(new Color(255, 102, 0));
+                buttonPanel.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
+                0, 0, 0, 0) , "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+                . BOTTOM, new java .awt .Font ("D\u0069alog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
+                red) ,buttonPanel. getBorder( )) ); buttonPanel. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
+                beans .PropertyChangeEvent e) {if ("\u0062order" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+                buttonPanel.setLayout(new MigLayout(
+                    "hidemode 3",
+                    // columns
+                    "0[218,fill]0",
+                    // rows
+                    "[]0" +
+                    "[50,shrinkprio 50,sizegroup 1,fill]0" +
+                    "[50,shrinkprio 50,sizegroup 1,fill]0" +
+                    "[40,shrinkprio 50,sizegroup 1,fill]0" +
+                    "[shrinkprio 50,sizegroup 1]0" +
+                    "[190,growprio 60,grow,fill]0"));
 
-            //---- btnPatrons ----
-            btnPatrons.setText("Patrons");
-            btnPatrons.addActionListener(e -> btnPatronsActionPerformed(e));
-            buttonPanel.add(btnPatrons, "cell 0 2");
+                //---- btnDashboard ----
+                btnDashboard.setText("Dashboard");
+                btnDashboard.setBackground(new Color(255, 102, 0));
+                btnDashboard.addActionListener(e -> btnDashboardActionPerformed(e));
+                buttonPanel.add(btnDashboard, "cell 0 1");
 
-            //---- btnDonations ----
-            btnDonations.setText("Donations");
-            btnDonations.addActionListener(e -> btnDonationsActionPerformed(e));
-            buttonPanel.add(btnDonations, "cell 0 3");
+                //---- btnPatrons ----
+                btnPatrons.setText("Patrons");
+                btnPatrons.setBackground(new Color(255, 102, 0));
+                btnPatrons.addActionListener(e -> btnPatronsActionPerformed(e));
+                buttonPanel.add(btnPatrons, "cell 0 2");
 
-            //---- btnDevAddPatron ----
-            btnDevAddPatron.setText("DEV - Add Patron");
-            btnDevAddPatron.addActionListener(e -> btnDevAddPatronActionPerformed(e));
-            buttonPanel.add(btnDevAddPatron, "cell 0 4");
+                //---- btnDonations ----
+                btnDonations.setText("Donations");
+                btnDonations.setBackground(new Color(255, 102, 0));
+                btnDonations.addActionListener(e -> btnDonationsActionPerformed(e));
+                buttonPanel.add(btnDonations, "cell 0 3");
+
+                //---- btnDevAddPatron ----
+                btnDevAddPatron.setText("DEV - Add Patron");
+                btnDevAddPatron.setBackground(new Color(255, 102, 0));
+                btnDevAddPatron.addActionListener(e -> btnDevAddPatronActionPerformed(e));
+                buttonPanel.add(btnDevAddPatron, "cell 0 4");
+            }
+            mainPanelContentPane.add(buttonPanel, "cell 0 0");
+
+            //======== contentPanel ========
+            {
+                contentPanel.setLayout(new CardLayout());
+            }
+            mainPanelContentPane.add(contentPanel, "cell 1 0");
+            mainPanel.pack();
+            mainPanel.setLocationRelativeTo(mainPanel.getOwner());
         }
-        contentPane.add(buttonPanel, "cell 0 0 1 3");
-
-        //======== contentPanel ========
-        {
-            contentPanel.setLayout(new CardLayout());
-        }
-        contentPane.add(contentPanel, "cell 1 0 1 3");
-        pack();
-        setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
     
@@ -139,7 +152,29 @@ public class MainScreen extends JFrame {
     }
 
     private void setColors(){
+        //Set Button Panel Color
         buttonPanel.setBackground(new Color(250,126,0));
+        Border emptyBorder = BorderFactory.createEmptyBorder();
+
+        //Set Button Colors
+        btnDashboard.setBackground(STStandard.LF_DEFAULT_SIDEBAR_BTN);
+        btnDashboard.setForeground(STStandard.LF_DEFAULT_SIDEBAR_BTN_TEXT);
+        btnDashboard.setBorder(emptyBorder);
+
+        btnPatrons.setBackground(STStandard.LF_DEFAULT_SIDEBAR_BTN);
+        btnPatrons.setForeground(STStandard.LF_DEFAULT_SIDEBAR_BTN_TEXT);
+        btnPatrons.setBorder(emptyBorder);
+
+        btnDonations.setBackground(STStandard.LF_DEFAULT_SIDEBAR_BTN);
+        btnDonations.setForeground(STStandard.LF_DEFAULT_SIDEBAR_BTN_TEXT);
+        btnDonations.setBorder(emptyBorder);
+
+        patronScreen.setBackground(new Color(77,77,77));
+        mainPanel.setBackground(new Color(77,77,77));
+        //exitPanel.setBackground(new Color(0,0,0));
+
+
+
         contentPanel.setBackground(new Color(77,77,77));
     }
     
@@ -147,6 +182,7 @@ public class MainScreen extends JFrame {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Andrew Guillard
+    private JFrame mainPanel;
     private JPanel buttonPanel;
     private JButton btnDashboard;
     private JButton btnPatrons;

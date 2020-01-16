@@ -1,8 +1,10 @@
 package com.amg.supporttracker.gui.util;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class STUtil {
     
@@ -30,6 +32,18 @@ public class STUtil {
             pe.printStackTrace();
             return null;
         }
+    }
+
+    //Format currenct DEFAULT = USD
+    public static String formatCurrency(Double amount){
+        return NumberFormat.getCurrencyInstance().format(amount);
+    }
+
+    //Format currency with a locale and a region
+    //TODO: Add configurable option for this.
+    public static String formatCurrency(String lang, String region, Double amount){
+        Locale locale = new Locale(lang, region);
+        return NumberFormat.getCurrencyInstance(locale).format(amount);
     }
     
     
