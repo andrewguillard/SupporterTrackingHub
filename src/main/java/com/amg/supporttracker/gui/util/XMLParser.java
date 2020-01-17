@@ -75,7 +75,7 @@ public class XMLParser {
                         //Get ID
                         patronElement = (Element) patronNodes.item(i);
                         newPatron.setPatronId(Integer.parseInt(patronElement.getAttribute("id")));
-                        System.out.println("Reading Patron ID: " + newPatron.getPatronId() + " found. Updating record.");
+                        System.out.println("Reading Patron ID: " + newPatron.getPatronId());
 
                         //Get Basic Elements
                         newPatron.setPatronName(readBasicElement(patronElement, "patronName"));
@@ -101,10 +101,71 @@ public class XMLParser {
         return patrons;
     }
 
-    public ArrayList<DonationDTO> readDonationsFile(){
+    //Read donations file and return an array of DonationDTOs
+    public static ArrayList<DonationDTO> readDonationsFile(){
         ArrayList<DonationDTO> donations = new ArrayList<>();
-        File file = new File("donations.xml");
 
+        try {
+            System.out.println("Reading Donations File");
+            File donationsFile = new File(donationsFilePath);
+            boolean fileExists = donationsFile.exists();
+            Document document;
+
+            //If the file doesnt exist, exit..
+            if(!fileExists) {
+                System.out.println("File not found. Aborting read.");
+                return donations;
+            }
+
+            try {
+                document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(donationsFile);
+                document.getDocumentElement().normalize();
+            } catch(Exception ex){
+                System.out.println("Parse failure on Read. Aborting read.");
+                ex.printStackTrace();
+                return donations;
+            }
+
+            //If the root node doesnt exist, abort. 
+            NodeList rootNode = document.getElementsByTagName("donations");
+            if(rootNode == null || rootNode.getLength() < 1){
+                System.out.println("Root node not found. Aborting read.");
+                return donations;
+            }
+
+            Element rootElement = (Element) rootNode.item(0);
+            Element donationElement;
+            NodeList donationNodes = rootElement.getElementsByTagName("donation");
+            DonationDTO newDonation;
+
+            for(int i = 0; i < donationNodes.getLength(); i++){
+                //SEARCH FOR DONATION
+                if(donationNodes.item(i) != null){
+                    newDonation = new DonationDTO();
+                    try {
+                        //Get ID
+                        donationElement = (Element) donationNodes.item(i);
+                        newDonation.setDonationId(Integer.parseInt(donationElement.getAttribute("id")));
+                        System.out.println("Reading Donation ID: " + newDonation.getDonationId());
+
+                        //Get Basic Elements
+                        newDonation.setDonationName(readBasicElement(donationElement, "donationName"));
+                        newDonation.setFriendlyName(readBasicElement(donationElement, "friendlyName"));
+                        newDonation.setDiscordName(readBasicElement(donationElement, "discordName"));
+                        newDonation.setDonationAmount(Double.parseDouble(readBasicElement(donationElement, "donationAmount")));
+                        newDonation.setDonationDate(STUtil.formatStringToDate(readBasicElement(donationElement, "donationDate"), STStandard.XML_DATE_FORMAT));
+                        newDonation.setSource(readBasicElement(donationElement, "source"));
+                    } catch(Exception ex){
+                        System.out.println("Setting Donation values failed. Adding incomplete donation. Please contact developer to resolve this.");
+                        ex.printStackTrace();
+                    }
+
+                    donations.add(newDonation);
+                }
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
         return donations;
     }
 
@@ -164,6 +225,8 @@ public class XMLParser {
                     patronElement = existingPatronsMap.get(patron.getPatronId());
 
                     updateBasicElement(document, patronElement, "patronName", patron.getPatronNameString());
+                    updateBasicElement(document, patronElement, "friendlyName", patron.getFriendlyNameString());
+                    updateBasicElement(document, patronElement, "discordName", patron.getDiscordNameString());
                     updateBasicElement(document, patronElement, "tier", patron.getTierNumString());
                     updateBasicElement(document, patronElement, "pledge", patron.getPledgeAmountString());
                     updateBasicElement(document, patronElement, "totalAmount", patron.getTotalAmountString());
@@ -203,9 +266,90 @@ public class XMLParser {
         }
     }
 
-    public void writeDonationsFile(ArrayList<DonationDTO> donations){
-        File file = new File("donations.xml");
+    //Write donations to the donations.xml file. Will search for existing donations to update. If not found, will add the donations to the file.
+    public static void writeDonationsFile(ArrayList<DonationDTO> donations){
+        try {
+            System.out.println("Writing Donations File");
+            File donationsFile = new File(donationsFilePath);
+            boolean fileExists = donationsFile.exists();
+            Document document;
 
+            //If the file exists, we will edit it. If not, we create new file.
+            if(fileExists){
+                try {
+                    document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(donationsFile);
+                    document.getDocumentElement().normalize();
+                } catch(Exception ex){
+                    System.out.println("Parse failure. Creating new document.");
+                    System.out.println("Stack Trace:");
+                    ex.printStackTrace();
+                    document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                }
+            } else{
+                document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            }
+
+            //If the root node exists, use it. If not, create it!
+            Element rootElement;
+            NodeList rootNode = document.getElementsByTagName("donations");
+            if(rootNode != null && rootNode.getLength() > 0){
+                rootElement = (Element) rootNode.item(0);
+            } else{
+                rootElement = document.createElement("donations");
+                document.appendChild(rootElement);
+            }
+
+            //Convert patrons to a hashmap for easy searching
+            HashMap<Integer, Element> existingDonationsMap = new HashMap<>();
+            NodeList donationNodes = rootElement.getElementsByTagName("donation");
+            Element element;
+            for(int i = 0; i < donationNodes.getLength(); i++){
+                element = (Element) donationNodes.item(i);
+                existingDonationsMap.put(Integer.parseInt(element.getAttribute("id")), element);
+            }
+
+            //Go through donations list. If one is found in the XML hashmap, update it. If not, add it.
+            Element donationElement;
+            for(DonationDTO donation : donations){
+                //SEARCH FOR DONATION
+                if(existingDonationsMap.get(donation.getDonationId()) != null){
+                    System.out.println("Donation ID: " + donation.getDonationIdString() + " found. Updating record.");
+                    donationElement = existingDonationsMap.get(donation.getDonationId());
+
+                    updateBasicElement(document, donationElement, "donationName", donation.getDonationNameString());
+                    updateBasicElement(document, donationElement, "friendlyName", donation.getFriendlyNameString());
+                    updateBasicElement(document, donationElement, "discordName", donation.getDiscordNameString());
+                    updateBasicElement(document, donationElement, "donationAmount", donation.getDonationAmountString());
+                    updateBasicElement(document, donationElement, "donationDate", donation.getDonationDateStringXml());
+                    updateBasicElement(document, donationElement, "source", donation.getSourceString());
+                } else {
+                    //ADD NEW DONATION
+                    System.out.println("Donation ID: " + donation.getDonationIdString() + " not found. Adding record.");
+                    //main donation element + id attribute
+                    donationElement = document.createElement("donation");
+                    rootElement.appendChild(donationElement);
+
+                    Attr idAttribute = document.createAttribute("id");
+                    idAttribute.setValue(donation.getDonationIdString());
+                    donationElement.setAttributeNode(idAttribute);
+
+                    //Create basic elements
+                    donationElement.appendChild(createBasicElement(document, "donationName", donation.getDonationNameString()));
+                    donationElement.appendChild(createBasicElement(document, "friendlyName", donation.getFriendlyNameString()));
+                    donationElement.appendChild(createBasicElement(document, "discordName", donation.getDiscordNameString()));
+                    donationElement.appendChild(createBasicElement(document, "donationAmount", donation.getDonationAmountString()));
+                    donationElement.appendChild(createBasicElement(document, "donationDate", donation.getDonationDateStringXml()));
+                    donationElement.appendChild(createBasicElement(document, "source", donation.getSourceString()));
+                }
+            }
+
+            Transformer transformer = createTransformer();
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(donationsFile);
+            transformer.transform(source, result);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     //Create a basic element given the document, the element name, and the element value.
