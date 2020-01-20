@@ -17,6 +17,7 @@ public class STTable extends JTable {
     private ArrayList<?> tableData;
     private ArrayList<String> activeSort;
     private STTableColumnModel columnModel;
+    private STTableModel tableModel;
     private String filter;
 
     public STTable(){
@@ -25,18 +26,17 @@ public class STTable extends JTable {
 
     public STTable(ArrayList<Object> data, ArrayList<STHeaderData> headers){
         super(new Object[1][], headers.stream().map(e -> e.getDisplay()).toArray());
-        STTableModel tableModel = new STTableModel(data, headers);
-        this.setModel(tableModel);
-        
-        columnModel = new STTableColumnModel(headers);
-        this.setColumnModel(columnModel);
-        this.filter = "all";
-        setTableData(data);
         this.table = this;
+        initTableComponents(data, headers);
+        
+        //Set the filter
+        this.filter = "all";
         
         //Set default sort
         this.activeSort = new ArrayList<>();
         activeSort.add("+patronName");
+
+        setTableData(data);
 
         //table.setDefaultRenderer(String.class, new STTableRenderer());
 
@@ -44,6 +44,16 @@ public class STTable extends JTable {
         
         //testSorter();
         //replace data
+    }
+    
+    private void initTableComponents(ArrayList<Object> data, ArrayList<STHeaderData> headers){
+        //Create column model
+        columnModel = new STTableColumnModel(headers);
+        table.setColumnModel(columnModel);
+        
+        //Create the table model (handles data)
+        tableModel = new STTableModel(data, headers);
+        table.setModel(tableModel);
     }
 
     private void initListeners(){
@@ -63,14 +73,6 @@ public class STTable extends JTable {
                 super.mouseClicked(e);
             }
         });
-    }
-    
-    //Sorts the table according to inputs. 1st is primary sort. 2nd is secondary sort. So on and so fourth.
-    public void sortTable(String... sort){
-        //this.
-        for(String header : sort){
-            //Sort based on header
-        }
     }
     
     //Refresh the table by removing the existing one and rebuilding

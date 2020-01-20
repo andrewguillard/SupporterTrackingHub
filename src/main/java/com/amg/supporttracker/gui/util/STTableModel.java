@@ -71,5 +71,9 @@ public class STTableModel extends DefaultTableModel {
         }
         super.setDataVector(data, headerList.stream().map(e -> e.getDisplay()).toArray());
     }
+    
+    public ArrayList<?> getTableData(){
+        return tableData;
+    }
 
 }
