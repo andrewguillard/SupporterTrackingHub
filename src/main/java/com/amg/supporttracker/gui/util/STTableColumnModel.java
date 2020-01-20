@@ -10,14 +10,14 @@ import java.util.ArrayList;
 
 public class STTableColumnModel extends DefaultTableColumnModel {
 
-    ArrayList<STTableHeader> headers;
-    ArrayList<STTableHeader> sortHeaders;
+    ArrayList<STHeaderData> headers;
+    ArrayList<STHeaderData> sortHeaders;
 
     public STTableColumnModel(){
         super();
     }
 
-    public STTableColumnModel(ArrayList<STTableHeader> headers){
+    public STTableColumnModel(ArrayList<STHeaderData> headers){
         super();
         this.headers = headers;
     }
@@ -36,17 +36,17 @@ public class STTableColumnModel extends DefaultTableColumnModel {
     }
 
     private void shiftHeaders(int initialPos, int newPos){
-        STTableHeader movedHeader = headers.get(initialPos);
+        STHeaderData movedHeader = headers.get(initialPos);
         headers.remove(initialPos);
         headers.add(newPos, movedHeader);
     }
 
     //TODO: Probably need to do stuff to make the headers actually go on the table
-    public ArrayList<STTableHeader> getHeaders() {
+    public ArrayList<STHeaderData> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(ArrayList<STTableHeader> headers) {
+    public void setHeaders(ArrayList<STHeaderData> headers) {
         this.headers = headers;
     }
 
@@ -62,7 +62,7 @@ public class STTableColumnModel extends DefaultTableColumnModel {
     //Remove all other sorts and set this header as the only sort
     public void setSort(int col){
         //GO through current sorts and set their sort symbol to ""
-        for(STTableHeader header : sortHeaders){
+        for(STHeaderData header : sortHeaders){
             header.resetSort();
         }
         sortHeaders = new ArrayList<>();
@@ -70,13 +70,13 @@ public class STTableColumnModel extends DefaultTableColumnModel {
         sortHeaders.add(headers.get(col));
     }
 
-    public void setSortIcon(int col, STTableHeader header){
+    public void setSortIcon(int col, STHeaderData header){
     }
 
     //Build sort list based on columns of sort
     public ArrayList<String> getSorts(){
         ArrayList<String> sorts = new ArrayList<>();
-        for(STTableHeader sortHeader : sortHeaders){
+        for(STHeaderData sortHeader : sortHeaders){
             sorts.add(sortHeader.getSortSymbol() + sortHeader.getProperty());
         }
         return sorts;

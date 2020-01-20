@@ -2,7 +2,7 @@ package com.amg.supporttracker.gui.util;
 
 import javax.swing.table.JTableHeader;
 
-public class STTableHeader{
+public class STHeaderData {
     
     private String property;
     private String display;
@@ -11,19 +11,19 @@ public class STTableHeader{
     private String sortSymbol;
     private boolean isEditable;
     
-    public STTableHeader(String property, String display){
+    public STHeaderData(String property, String display){
         this.property = property;
         this.display = display;
         this.isEditable = false;
     }
 
-    public STTableHeader(String property, String display, boolean isEditable){
+    public STHeaderData(String property, String display, boolean isEditable){
         this.property = property;
         this.display = display;
         this.isEditable = isEditable;
     }
 
-    public STTableHeader(String property, String display, int position, int size){
+    public STHeaderData(String property, String display, int position, int size){
         this.property = property;
         this.display = display;
         this.position = position;

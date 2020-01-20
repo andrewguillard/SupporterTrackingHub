@@ -23,8 +23,11 @@ public class STTable extends JTable {
         this(null, null);
     }
 
-    public STTable(ArrayList<Object> data, ArrayList<STTableHeader> headers){
+    public STTable(ArrayList<Object> data, ArrayList<STHeaderData> headers){
         super(new Object[1][], headers.stream().map(e -> e.getDisplay()).toArray());
+        STTableModel tableModel = new STTableModel(data, headers);
+        this.setModel(tableModel);
+        
         columnModel = new STTableColumnModel(headers);
         this.setColumnModel(columnModel);
         this.filter = "all";
@@ -73,38 +76,37 @@ public class STTable extends JTable {
     //Refresh the table by removing the existing one and rebuilding
     public void refreshTable(){
         //Refresh the headers to be sure we have the right ones.
-        ArrayList<STTableHeader> headers = columnModel.getHeaders();
+        ArrayList<STHeaderData> headers = columnModel.getHeaders();
         if(headers == null){
             return;
         }
 
         //Remove Table elements by creating a new table model
-        DefaultTableModel newModel = new DefaultTableModel();
+        STTableModel newModel = new STTableModel(tableData, headers);
 
         //Build headers (should be in order as long as headers list is updated on move)
-        for(STTableHeader header : headers){
+        for(STHeaderData header : headers){
             newModel.addColumn(header.getDisplay());
         }
         
-        //TODO: Whenever headers move, headerNames needs to update.
-        //Rebuild the table.
-        Object[] rowData;
-        if(tableData != null && tableData.size() > 0) {
-            for (Object row : tableData) {
-                rowData = new Object[headers.size()];
-                for (int i = 0; i < headers.size(); i++) {
-                    try {
-                        System.out.println("[" + i + "] Attempting to get data from get" + headers.get(i).getProperty() + "String()");
-                        rowData[i] = STUtil.invokeGetter(row, headers.get(i).getProperty(), "String");
-                    }
-                    catch (Exception e) {
-                        System.out.println("ERROR: Exception while building rowData.");
-                        e.printStackTrace();
-                    }
-                }
-                newModel.addRow(rowData);
-            }
-        }
+//        //Rebuild the table.
+//        Object[] rowData;
+//        if(tableData != null && tableData.size() > 0) {
+//            for (Object row : tableData) {
+//                rowData = new Object[headers.size()];
+//                for (int i = 0; i < headers.size(); i++) {
+//                    try {
+//                        System.out.println("[" + i + "] Attempting to get data from get" + headers.get(i).getProperty() + "String()");
+//                        rowData[i] = STUtil.invokeGetter(row, headers.get(i).getProperty(), "String");
+//                    }
+//                    catch (Exception e) {
+//                        System.out.println("ERROR: Exception while building rowData.");
+//                        e.printStackTrace();
+//                    }
+//                }
+//                newModel.addRow(rowData);
+//            }
+//        }
         this.setModel(newModel);
     }
     
@@ -134,12 +136,12 @@ public class STTable extends JTable {
         return allData;
     }
 
-    public void setHeaders(ArrayList<STTableHeader> headers) {
+    public void setHeaders(ArrayList<STHeaderData> headers) {
         STTableColumnModel newColumnModel = new STTableColumnModel(headers);
         this.setColumnModel(newColumnModel);
     }
 
-    public ArrayList<STTableHeader> getHeaders() {
+    public ArrayList<STHeaderData> getHeaders() {
         return ((STTableColumnModel)this.getColumnModel()).getHeaders();
     }
 

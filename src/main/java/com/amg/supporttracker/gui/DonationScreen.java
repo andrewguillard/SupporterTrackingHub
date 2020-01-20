@@ -17,7 +17,7 @@ import net.miginfocom.swing.*;
 public class DonationScreen extends JPanel {
 
     private ArrayList<DonationDTO> loadedDonations;
-    private ArrayList<STTableHeader> headers;
+    private ArrayList<STHeaderData> headers;
 
     public DonationScreen(Dimension dim) {
         loadData();
@@ -51,14 +51,14 @@ public class DonationScreen extends JPanel {
         XMLParser.writeDonationsFile(donations);
     }
 
-    public ArrayList<STTableHeader> generateHeaders(){
-        ArrayList<STTableHeader> headers = new ArrayList<>();
-        headers.add(new STTableHeader("donationName", "Name", true));
-        headers.add(new STTableHeader("friendlyName", "Friendly Name", true));
-        headers.add(new STTableHeader("discordName", "Discord Name", true));
-        headers.add(new STTableHeader("donationAmount", "Amount", true));
-        headers.add(new STTableHeader("donationDate", "Donation Date", true));
-        headers.add(new STTableHeader("source", "Source"));
+    public ArrayList<STHeaderData> generateHeaders(){
+        ArrayList<STHeaderData> headers = new ArrayList<>();
+        headers.add(new STHeaderData("donationName", "Name", true));
+        headers.add(new STHeaderData("friendlyName", "Friendly Name", true));
+        headers.add(new STHeaderData("discordName", "Discord Name", true));
+        headers.add(new STHeaderData("donationAmount", "Amount", true));
+        headers.add(new STHeaderData("donationDate", "Donation Date", true));
+        headers.add(new STHeaderData("source", "Source"));
 
         return headers;
     }

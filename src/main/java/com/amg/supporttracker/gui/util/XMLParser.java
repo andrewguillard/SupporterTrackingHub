@@ -353,6 +353,16 @@ public class XMLParser {
         }
     }
 
+    public static void saveList(ArrayList<?> list){
+        if(list != null && !list.isEmpty()){
+            if(list.get(0) instanceof PatronDTO){
+                writePatronsFile((ArrayList<PatronDTO>)list);
+            } else if(list.get(0) instanceof DonationDTO){
+                writeDonationsFile((ArrayList<DonationDTO>)list);
+            }
+        }
+    }
+
     //Create a basic element given the document, the element name, and the element value.
     private static Element createBasicElement(Document doc, String elementName, String elementValue){
         Element element;

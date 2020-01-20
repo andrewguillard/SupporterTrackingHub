@@ -1,16 +1,22 @@
 package com.amg.supporttracker.gui.util;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
-public class STTableModel extends AbstractTableModel {
+public class STTableModel extends DefaultTableModel {
 
     private ArrayList<?> tableData;
-    private ArrayList<STTableHeader> tableHeaders;
+    private ArrayList<STHeaderData> tableHeaders;
 
-    public STTableModel(ArrayList<?> data, ArrayList<STTableHeader> headers) {
+    public STTableModel(ArrayList<?> data, ArrayList<STHeaderData> headers) {
+        super();
+        if(data == null){
+            data = new ArrayList<>();
+        }
         this.tableData = data;
         this.tableHeaders = headers;
+        setTableData(tableData, tableHeaders);
     }
 
     @Override
@@ -18,7 +24,7 @@ public class STTableModel extends AbstractTableModel {
         return tableHeaders.get(column).getDisplay();
     }
 
-    public STTableHeader getColumnHeader(int column) {
+    public STHeaderData getColumnHeader(int column) {
         return tableHeaders.get(column);
     }
 
@@ -29,7 +35,7 @@ public class STTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return tableData.size();
+        return tableData != null ? tableData.size() : 0;
     }
 
     @Override
@@ -46,8 +52,24 @@ public class STTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Object row = tableData.get(rowIndex);
-        STUtil.invokeSetter(row, tableHeaders.get(columnIndex).getProperty(), "", aValue);
-
+        String initialValue = (String) STUtil.invokeGetter(row, tableHeaders.get(columnIndex).getProperty(), "String");
+        if(!initialValue.equals((String) aValue)) {
+            STUtil.invokeSetter(row, tableHeaders.get(columnIndex).getProperty(), "", aValue);
+            XMLParser.saveList(tableData);
+        }
+    }
+    
+    //Set the table data.
+    public void setTableData(ArrayList<?> dataList, ArrayList<STHeaderData> headerList){
+        Object[][] data = new Object[dataList.size()][headerList.size()];
+        Object cellData;
+        for(int i =0; i < dataList.size(); i++){
+            for(int j = 0; j < headerList.size(); j++){
+                cellData = STUtil.invokeGetter(dataList.get(i), headerList.get(j).getProperty(), "String");
+                data[i][j] = cellData;
+            }
+        }
+        super.setDataVector(data, headerList.stream().map(e -> e.getDisplay()).toArray());
     }
 
 }

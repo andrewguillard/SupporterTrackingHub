@@ -24,7 +24,7 @@ import net.miginfocom.swing.*;
 public class PatronScreen extends JPanel {
 
     private ArrayList<PatronDTO> loadedPatrons;
-    private ArrayList<STTableHeader> headers;
+    private ArrayList<STHeaderData> headers;
 
     public PatronScreen(Dimension dim) {
         loadData();
@@ -66,16 +66,16 @@ public class PatronScreen extends JPanel {
         XMLParser.writePatronsFile(patrons);
     }
 
-    public ArrayList<STTableHeader> generateHeaders(){
-        ArrayList<STTableHeader> headers = new ArrayList<>();
-        headers.add(new STTableHeader("patronName", "Patron Name"));
-        headers.add(new STTableHeader("friendlyName", "Friendly Name", true));
-        headers.add(new STTableHeader("discordName", "Discord Name", true));
-        headers.add(new STTableHeader("tierNum", "Tier"));
-        headers.add(new STTableHeader("pledgeAmount", "Pledge Amount"));
-        headers.add(new STTableHeader("totalAmount", "Total Amount"));
-        headers.add(new STTableHeader("pledgeDate", "Pledge Date"));
-        headers.add(new STTableHeader("status", "Status"));
+    public ArrayList<STHeaderData> generateHeaders(){
+        ArrayList<STHeaderData> headers = new ArrayList<>();
+        headers.add(new STHeaderData("patronName", "Patron Name"));
+        headers.add(new STHeaderData("friendlyName", "Friendly Name", true));
+        headers.add(new STHeaderData("discordName", "Discord Name", true));
+        headers.add(new STHeaderData("tierNum", "Tier"));
+        headers.add(new STHeaderData("pledgeAmount", "Pledge Amount"));
+        headers.add(new STHeaderData("totalAmount", "Total Amount"));
+        headers.add(new STHeaderData("pledgeDate", "Pledge Date"));
+        headers.add(new STHeaderData("status", "Status"));
 
         return headers;
     }
