@@ -5,6 +5,7 @@
 package com.amg.supporttracker.gui;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -30,7 +31,6 @@ public class PatronScreen extends JPanel {
         this.headers = generateHeaders();
         initComponents();
         this.setSize(dim);
-        textField1.setText("Patron");
 
         loadUI();
     }
@@ -38,7 +38,12 @@ public class PatronScreen extends JPanel {
     private void loadUI(){
         //Create table headers
         patronTable.setHeaders(headers);
+        patronTable.setFilter("active");
         patronTable.setTableData(loadedPatrons);
+
+        cboPatronFilter.addItem("Active");
+        cboPatronFilter.addItem("Retired");
+        cboPatronFilter.addItem("All");
     }
 
     private void loadData(){
@@ -64,14 +69,13 @@ public class PatronScreen extends JPanel {
     public ArrayList<STTableHeader> generateHeaders(){
         ArrayList<STTableHeader> headers = new ArrayList<>();
         headers.add(new STTableHeader("patronName", "Patron Name"));
-        headers.add(new STTableHeader("friendlyName", "Friendly Name"));
-        headers.add(new STTableHeader("discordName", "Discord Name"));
+        headers.add(new STTableHeader("friendlyName", "Friendly Name", true));
+        headers.add(new STTableHeader("discordName", "Discord Name", true));
         headers.add(new STTableHeader("tierNum", "Tier"));
         headers.add(new STTableHeader("pledgeAmount", "Pledge Amount"));
         headers.add(new STTableHeader("totalAmount", "Total Amount"));
         headers.add(new STTableHeader("pledgeDate", "Pledge Date"));
-        headers.add(new STTableHeader("declineDate", "Decline Date"));
-        headers.add(new STTableHeader("source", "Source"));
+        headers.add(new STTableHeader("status", "Status"));
 
         return headers;
     }
@@ -92,22 +96,35 @@ public class PatronScreen extends JPanel {
 //        });
     }
 
+    private void cboPatronFilterActionPerformed(ActionEvent e) {
+        System.out.println("Filtering patrons by: "+cboPatronFilter.getSelectedItem().toString());
+        patronTable.doFilter(cboPatronFilter.getSelectedItem().toString());
+    }
+
+    private void btnAddPatronActionPerformed(ActionEvent e) {
+        System.out.println("Manually adding a patron.");
+        AddPatron addPatron = new AddPatron(this);
+        addPatron.setVisible(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Andrew Guillard
-        panel1 = new JPanel();
-        textField1 = new JTextField();
+        patronTopPanel = new JPanel();
+        btnPatreonIntegration = new JButton();
+        lblPatronFilters = new JLabel();
+        cboPatronFilter = new JComboBox();
         patronScrollPane = new JScrollPane();
         patronTable = new STTable(null, this.headers);
+        btnAddPatron = new JButton();
 
         //======== this ========
-        setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.
-        swing.border.EmptyBorder(0,0,0,0), "JFor\u006dDesi\u0067ner \u0045valu\u0061tion",javax.swing.border
-        .TitledBorder.CENTER,javax.swing.border.TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog"
-        ,java.awt.Font.BOLD,12),java.awt.Color.red), getBorder
-        ())); addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java
-        .beans.PropertyChangeEvent e){if("bord\u0065r".equals(e.getPropertyName()))throw new RuntimeException
-        ();}});
+        setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder
+        (0,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing.border.TitledBorder.CENTER,javax.swing.border
+        .TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,12),java.awt
+        .Color.red), getBorder())); addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void
+        propertyChange(java.beans.PropertyChangeEvent e){if("\u0062ord\u0065r".equals(e.getPropertyName()))throw new RuntimeException()
+        ;}});
         setLayout(new MigLayout(
             "insets 0,hidemode 3,gap 0 0",
             // columns
@@ -119,34 +136,53 @@ public class PatronScreen extends JPanel {
             "[294,grow]" +
             "[]"));
 
-        //======== panel1 ========
+        //======== patronTopPanel ========
         {
-            panel1.setLayout(new MigLayout(
+            patronTopPanel.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
+                "[152,fill]" +
+                "[236,grow,fill]" +
+                "[130,fill]" +
                 "[236,grow,fill]",
                 // rows
                 "[]"));
 
-            //---- textField1 ----
-            textField1.setText("Hello Darkness my old friend.");
-            panel1.add(textField1, "cell 0 0");
+            //---- btnPatreonIntegration ----
+            btnPatreonIntegration.setText("Connect to Patreon");
+            patronTopPanel.add(btnPatreonIntegration, "cell 0 0");
+
+            //---- lblPatronFilters ----
+            lblPatronFilters.setText("Filter Patrons");
+            patronTopPanel.add(lblPatronFilters, "cell 2 0");
+
+            //---- cboPatronFilter ----
+            cboPatronFilter.addActionListener(e -> cboPatronFilterActionPerformed(e));
+            patronTopPanel.add(cboPatronFilter, "cell 3 0");
         }
-        add(panel1, "cell 1 0");
+        add(patronTopPanel, "cell 1 0");
 
         //======== patronScrollPane ========
         {
             patronScrollPane.setViewportView(patronTable);
         }
         add(patronScrollPane, "cell 1 1");
+
+        //---- btnAddPatron ----
+        btnAddPatron.setText("Manually Add a Patron");
+        btnAddPatron.addActionListener(e -> btnAddPatronActionPerformed(e));
+        add(btnAddPatron, "cell 1 2");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Andrew Guillard
-    private JPanel panel1;
-    private JTextField textField1;
+    private JPanel patronTopPanel;
+    private JButton btnPatreonIntegration;
+    private JLabel lblPatronFilters;
+    private JComboBox cboPatronFilter;
     private JScrollPane patronScrollPane;
     private STTable patronTable;
+    private JButton btnAddPatron;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

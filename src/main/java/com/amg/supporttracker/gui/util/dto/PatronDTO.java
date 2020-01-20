@@ -17,6 +17,7 @@ public class PatronDTO {
     private Date pledgeDate;
     private Date declineDate;
     private String source;
+    private String status;
 
     public PatronDTO(){
     }
@@ -166,5 +167,17 @@ public class PatronDTO {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getStatusString(){
+        return status != null ? status : "undefined";
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

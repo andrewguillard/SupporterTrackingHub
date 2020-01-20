@@ -4,18 +4,13 @@ import com.amg.supporttracker.gui.util.dto.DonationDTO;
 import com.amg.supporttracker.gui.util.dto.PatronDTO;
 
 import org.w3c.dom.*;
-import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +82,7 @@ public class XMLParser {
                         newPatron.setPledgeDate(STUtil.formatStringToDate(readBasicElement(patronElement, "pledgeDate"), STStandard.XML_DATE_FORMAT));
                         newPatron.setDeclineDate(STUtil.formatStringToDate(readBasicElement(patronElement, "declineDate"), STStandard.XML_DATE_FORMAT));
                         newPatron.setSource(readBasicElement(patronElement, "source"));
+                        newPatron.setStatus(readBasicElement(patronElement, "status"));
                     } catch(Exception ex){
                         System.out.println("Setting Patron values failed. Adding incomplete patron. Please contact developer to resolve this.");
                         ex.printStackTrace();
@@ -155,6 +151,7 @@ public class XMLParser {
                         newDonation.setDonationAmount(Double.parseDouble(readBasicElement(donationElement, "donationAmount")));
                         newDonation.setDonationDate(STUtil.formatStringToDate(readBasicElement(donationElement, "donationDate"), STStandard.XML_DATE_FORMAT));
                         newDonation.setSource(readBasicElement(donationElement, "source"));
+                        newDonation.setStatus(readBasicElement(donationElement, "status"));
                     } catch(Exception ex){
                         System.out.println("Setting Donation values failed. Adding incomplete donation. Please contact developer to resolve this.");
                         ex.printStackTrace();
@@ -233,6 +230,7 @@ public class XMLParser {
                     updateBasicElement(document, patronElement, "pledgeDate", patron.getPledgeDateStringXml());
                     updateBasicElement(document, patronElement, "declineDate", patron.getDeclineDateStringXml());
                     updateBasicElement(document, patronElement, "source", patron.getSourceString());
+                    updateBasicElement(document, patronElement, "status", patron.getStatusString());
                 } else {
                     //ADD NEW PATRON
                     System.out.println("Patron ID: " + patron.getPatronIdString() + " not found. Adding record.");
@@ -254,6 +252,7 @@ public class XMLParser {
                     patronElement.appendChild(createBasicElement(document, "pledgeDate", patron.getPledgeDateStringXml()));
                     patronElement.appendChild(createBasicElement(document, "declineDate", patron.getDeclineDateStringXml()));
                     patronElement.appendChild(createBasicElement(document, "source", patron.getSourceString()));
+                    patronElement.appendChild(createBasicElement(document, "status", patron.getStatusString()));
                 }
             }
 
@@ -322,6 +321,7 @@ public class XMLParser {
                     updateBasicElement(document, donationElement, "donationAmount", donation.getDonationAmountString());
                     updateBasicElement(document, donationElement, "donationDate", donation.getDonationDateStringXml());
                     updateBasicElement(document, donationElement, "source", donation.getSourceString());
+                    updateBasicElement(document, donationElement, "status", donation.getStatusString());
                 } else {
                     //ADD NEW DONATION
                     System.out.println("Donation ID: " + donation.getDonationIdString() + " not found. Adding record.");
@@ -340,6 +340,7 @@ public class XMLParser {
                     donationElement.appendChild(createBasicElement(document, "donationAmount", donation.getDonationAmountString()));
                     donationElement.appendChild(createBasicElement(document, "donationDate", donation.getDonationDateStringXml()));
                     donationElement.appendChild(createBasicElement(document, "source", donation.getSourceString()));
+                    donationElement.appendChild(createBasicElement(document, "status", donation.getStatusString()));
                 }
             }
 

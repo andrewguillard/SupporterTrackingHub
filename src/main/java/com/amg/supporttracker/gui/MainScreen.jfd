@@ -12,7 +12,7 @@ new FormModel {
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 				"$layoutConstraints": "hidemode 3"
 				"$columnConstraints": "0[218,fill]0"
-				"$rowConstraints": "[]0[50,shrinkprio 50,sizegroup 1,fill]0[50,shrinkprio 50,sizegroup 1,fill]0[40,shrinkprio 50,sizegroup 1,fill]0[shrinkprio 50,sizegroup 1]0[190,growprio 60,grow,fill]0"
+				"$rowConstraints": "[]0[50,shrinkprio 50,sizegroup 1,fill]0[50,shrinkprio 50,sizegroup 1,fill]0[40,shrinkprio 50,sizegroup 1,fill]0[40,shrinkprio 50]0[50,shrinkprio 50,sizegroup 1]0[190,growprio 60,grow,fill]0"
 			} ) {
 				name: "buttonPanel"
 				"background": new java.awt.Color( 255, 102, 0, 255 )
@@ -43,10 +43,18 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnDevAddPatron"
 					"text": "DEV - Add Patron"
-					"background": new java.awt.Color( 255, 102, 0, 255 )
+					"background": &Color0 new java.awt.Color( 255, 102, 0, 255 )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDevAddPatronActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 4"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnDevAddDonation"
+					"text": "DEV - Add Donation"
+					"background": #Color0
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnDevAddDonationActionPerformed", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 0 5"
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 0"
@@ -62,4 +70,3 @@ new FormModel {
 		} )
 	}
 }
-

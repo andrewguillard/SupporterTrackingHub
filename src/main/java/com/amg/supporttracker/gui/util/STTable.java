@@ -1,35 +1,65 @@
 package com.amg.supporttracker.gui.util;
 
-import com.amg.supporttracker.gui.util.dto.DonationDTO;
 import com.amg.supporttracker.gui.util.dto.PatronDTO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class STTable extends JTable {
 
-    private ArrayList<STTableHeader> headers;
+    private STTable table;
+    private ArrayList<?> allData;
     private ArrayList<?> tableData;
     private ArrayList<String> activeSort;
+    private STTableColumnModel columnModel;
+    private String filter;
 
     public STTable(){
-        super();
-        //testSorter();
+        this(null, null);
     }
 
     public STTable(ArrayList<Object> data, ArrayList<STTableHeader> headers){
         super(new Object[1][], headers.stream().map(e -> e.getDisplay()).toArray());
-        this.tableData = data;
-        this.headers = headers;
+        columnModel = new STTableColumnModel(headers);
+        this.setColumnModel(columnModel);
+        this.filter = "all";
+        setTableData(data);
+        this.table = this;
         
         //Set default sort
         this.activeSort = new ArrayList<>();
         activeSort.add("+patronName");
+
+        //table.setDefaultRenderer(String.class, new STTableRenderer());
+
+        initListeners();
         
         //testSorter();
         //replace data
+    }
+
+    private void initListeners(){
+        this.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int col = table.columnAtPoint(e.getPoint());
+                System.out.println("Column clicked: "+col);
+
+                if(e.getClickCount() == 2){
+                    ((STTableColumnModel) table.getColumnModel()).setSort(col);
+                } else{
+                    ((STTableColumnModel) table.getColumnModel()).toggleSort(col);
+                }
+                tableData = sortAll(tableData, ((STTableColumnModel) table.getColumnModel()).getSorts());
+                refreshTable();
+                super.mouseClicked(e);
+            }
+        });
     }
     
     //Sorts the table according to inputs. 1st is primary sort. 2nd is secondary sort. So on and so fourth.
@@ -42,9 +72,15 @@ public class STTable extends JTable {
     
     //Refresh the table by removing the existing one and rebuilding
     public void refreshTable(){
+        //Refresh the headers to be sure we have the right ones.
+        ArrayList<STTableHeader> headers = columnModel.getHeaders();
+        if(headers == null){
+            return;
+        }
+
         //Remove Table elements by creating a new table model
         DefaultTableModel newModel = new DefaultTableModel();
-        
+
         //Build headers (should be in order as long as headers list is updated on move)
         for(STTableHeader header : headers){
             newModel.addColumn(header.getDisplay());
@@ -74,17 +110,19 @@ public class STTable extends JTable {
     
     //Adds a new row to the table. If isSort, add it into the correct spot in the table.
     public void addTableRow(Object newRow, boolean isSort){
-        if(!isSort){
+        ((ArrayList<Object>) allData).add(newRow);
+
+        String status = (String) STUtil.invokeGetter(newRow, "status", "String");
+        if(status != null && status.equals(filter)){
             ((ArrayList<Object>) tableData).add(newRow);
-            refreshTable();
-        } else{
-            //TODO: Sort into tableData
-            refreshTable();
         }
+
+        refreshTable();
     }
     
     public void setTableData(ArrayList<?> data){
-        this.tableData = sortAll((ArrayList<Object>)data, activeSort);
+        this.allData = data;
+        this.tableData = sortAll(filterData(allData, filter), activeSort);
         refreshTable();
     }
 
@@ -92,58 +130,63 @@ public class STTable extends JTable {
         return tableData;
     }
 
+    public ArrayList<?> getAllData() {
+        return allData;
+    }
+
     public void setHeaders(ArrayList<STTableHeader> headers) {
-        this.headers = headers;
+        STTableColumnModel newColumnModel = new STTableColumnModel(headers);
+        this.setColumnModel(newColumnModel);
     }
 
     public ArrayList<STTableHeader> getHeaders() {
-        return headers;
+        return ((STTableColumnModel)this.getColumnModel()).getHeaders();
     }
 
-    //Test the sorting algorithm
-    public void testSorter(){
-        PatronDTO t1 = new PatronDTO(1, "Andrew", 4, 50.0, new Date());
-        PatronDTO t2 = new PatronDTO(2, "Joe", 2, 30.0, new Date());
-        PatronDTO t3 = new PatronDTO(3, "Bob", 2, 40.20, new Date());
-        PatronDTO t4 = new PatronDTO(4, "Alex", 3, 540.0, new Date());
-        PatronDTO t5 = new PatronDTO(5, "Momo", 1, 1.0, new Date());
-        PatronDTO t6 = new PatronDTO(6, "Gers", 1, 17.0, new Date());
-        PatronDTO t7 = new PatronDTO(7, "Simon", 1, 52.0, new Date());
-        PatronDTO t8 = new PatronDTO(8, "Garfunkle", 4, 320.0, new Date());
-        PatronDTO t9 = new PatronDTO(9, "googo", 1, 7.0, new Date());
-        PatronDTO t10 = new PatronDTO(10, "Picaso", 3, 80.0, new Date());
-        PatronDTO t11 = new PatronDTO(11, "Andrew", 1, 80.0, new Date());
-        PatronDTO t12 = new PatronDTO(12, "Picaso", 4, 80.0, new Date());
-        PatronDTO t13 = new PatronDTO(13, "Andrew", 2, 80.0, new Date());
-        ArrayList<Object> testPatrons = new ArrayList<>();
-        testPatrons.add(t1);
-        testPatrons.add(t2);
-        testPatrons.add(t3);
-        testPatrons.add(t4);
-        testPatrons.add(t5);
-        testPatrons.add(t6);
-        testPatrons.add(t7);
-        testPatrons.add(t8);
-        testPatrons.add(t9);
-        testPatrons.add(t10);
-        testPatrons.add(t11);
-        testPatrons.add(t12);
-        testPatrons.add(t13);
-        ArrayList<String> testSort = new ArrayList<>();
-        //testSort.add("-patronName");
-        testSort.add("+tierNum");
-        System.out.println("Testing Sort");
-        testPatrons = sortAll(testPatrons, testSort);
-        setTableData(testPatrons);
-        
-        for(Object pat : testPatrons){
-            System.out.println("Name: "+((PatronDTO)pat).getPatronNameString()+" Tier: "+((PatronDTO)pat).getTierNumString());
-        }
-    }
+//    //Test the sorting algorithm
+//    public void testSorter(){
+//        PatronDTO t1 = new PatronDTO(1, "Andrew", 4, 50.0, new Date());
+//        PatronDTO t2 = new PatronDTO(2, "Joe", 2, 30.0, new Date());
+//        PatronDTO t3 = new PatronDTO(3, "Bob", 2, 40.20, new Date());
+//        PatronDTO t4 = new PatronDTO(4, "Alex", 3, 540.0, new Date());
+//        PatronDTO t5 = new PatronDTO(5, "Momo", 1, 1.0, new Date());
+//        PatronDTO t6 = new PatronDTO(6, "Gers", 1, 17.0, new Date());
+//        PatronDTO t7 = new PatronDTO(7, "Simon", 1, 52.0, new Date());
+//        PatronDTO t8 = new PatronDTO(8, "Garfunkle", 4, 320.0, new Date());
+//        PatronDTO t9 = new PatronDTO(9, "googo", 1, 7.0, new Date());
+//        PatronDTO t10 = new PatronDTO(10, "Picaso", 3, 80.0, new Date());
+//        PatronDTO t11 = new PatronDTO(11, "Andrew", 1, 80.0, new Date());
+//        PatronDTO t12 = new PatronDTO(12, "Picaso", 4, 80.0, new Date());
+//        PatronDTO t13 = new PatronDTO(13, "Andrew", 2, 80.0, new Date());
+//        ArrayList<Object> testPatrons = new ArrayList<>();
+//        testPatrons.add(t1);
+//        testPatrons.add(t2);
+//        testPatrons.add(t3);
+//        testPatrons.add(t4);
+//        testPatrons.add(t5);
+//        testPatrons.add(t6);
+//        testPatrons.add(t7);
+//        testPatrons.add(t8);
+//        testPatrons.add(t9);
+//        testPatrons.add(t10);
+//        testPatrons.add(t11);
+//        testPatrons.add(t12);
+//        testPatrons.add(t13);
+//        ArrayList<String> testSort = new ArrayList<>();
+//        //testSort.add("-patronName");
+//        testSort.add("+tierNum");
+//        System.out.println("Testing Sort");
+//        testPatrons = sortAll(testPatrons, testSort);
+//        setTableData(testPatrons);
+//
+//        for(Object pat : testPatrons){
+//            System.out.println("Name: "+((PatronDTO)pat).getPatronNameString()+" Tier: "+((PatronDTO)pat).getTierNumString());
+//        }
+//    }
     
     //Use quicksort to sort a DTO by multiple parameters
-    public ArrayList<Object> sortAll(ArrayList<Object> data, ArrayList<String> sortParams){
-        if(data.size() <= 1){
+    public ArrayList<?> sortAll(ArrayList<?> data, ArrayList<String> sortParams){
+        if(data == null || data.size() <= 1){
             return data;
         }
         int pivotPointer = data.size() / 2;
@@ -193,5 +236,45 @@ public class STTable extends JTable {
         }
         //If we've gotten this far, they are the same record thus far as sorting can tell. 
         return 0;
+    }
+
+    public void doFilter(String filter){
+        doFilter(allData, filter);
+    }
+
+    public void doFilter(ArrayList<?> data, String filter){
+        this.filter = filter.toLowerCase();
+        tableData = filterData(data, this.filter);
+        refreshTable();
+    }
+
+    private ArrayList<?> filterData(ArrayList<?> data, String filter){
+        this.filter = filter.toLowerCase();
+
+        //If the filter is all, just return all of the data
+        if(this.filter == null || this.filter.equals("all")){
+            return allData;
+        }
+
+        ArrayList<Object> filteredData = new ArrayList<>();
+        String status;
+
+        if(data != null) {
+            for (Object dataObj : data) {
+                status = (String) STUtil.invokeGetter(dataObj, "status", "String");
+                if (status != null && status.equals(this.filter)) {
+                    filteredData.add(dataObj);
+                }
+            }
+        }
+        return filteredData;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public String getFilter() {
+        return filter;
     }
 }

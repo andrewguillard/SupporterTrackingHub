@@ -66,4 +66,20 @@ public class STUtil {
         }
         return null;
     }
+
+    public static Object invokeSetter(Object obj, String varName, String addon, Object setValue){
+        Object value;
+        String var = varName + addon;
+        try{
+            value = new PropertyDescriptor(var, obj.getClass(), null, "set" + Character.toUpperCase(var.charAt(0)) + var.substring(1)).getWriteMethod().invoke(obj, setValue);
+            return value;
+        } catch (IntrospectionException ie){
+            ie.printStackTrace();
+        } catch (IllegalAccessException iae){
+            iae.printStackTrace();
+        } catch(InvocationTargetException ite){
+            ite.printStackTrace();
+        }
+        return null;
+    }
 }

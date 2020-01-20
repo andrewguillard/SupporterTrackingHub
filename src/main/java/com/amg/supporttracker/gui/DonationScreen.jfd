@@ -25,9 +25,12 @@ new FormModel {
 				"value": "cell 1 0"
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "patronScrollPane"
-				add( new FormComponent( "javax.swing.JTable" ) {
-					name: "patronTable"
+				name: "donarionScrollPane"
+				add( new FormComponent( "com.amg.supporttracker.gui.util.STTable" ) {
+					name: "donationTable"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new STTable(null, this.headers);"
+					}
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 1 1"

@@ -22,6 +22,7 @@ public class MainScreen {
 
     CardLayout cardLayout;
     PatronScreen patronScreen;
+    DonationScreen donationScreen;
     
     public MainScreen() {
         initComponents();
@@ -59,6 +60,12 @@ public class MainScreen {
         addPatron.setVisible(true);
     }
 
+    private void btnDevAddDonationActionPerformed(ActionEvent e) {
+        System.out.println("Add Donation button clicked");
+        AddDonation addDonation = new AddDonation(donationScreen);
+        addDonation.setVisible(true);
+    }
+
     private void btnExitActionPerformed(ActionEvent e) {
         mainPanel.dispose();
     }
@@ -72,6 +79,7 @@ public class MainScreen {
         btnPatrons = new JButton();
         btnDonations = new JButton();
         btnDevAddPatron = new JButton();
+        btnDevAddDonation = new JButton();
         contentPanel = new JPanel();
 
         //======== mainPanel ========
@@ -88,11 +96,13 @@ public class MainScreen {
             //======== buttonPanel ========
             {
                 buttonPanel.setBackground(new Color(255, 102, 0));
-                buttonPanel.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder (
-                0, 0 ,0 , 0) ,  "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder
-                . BOTTOM, new java. awt .Font ( "D\u0069al\u006fg", java .awt . Font. BOLD ,12 ) ,java . awt. Color .
-                red ) ,buttonPanel. getBorder () ) ); buttonPanel. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java .
-                beans. PropertyChangeEvent e) { if( "\u0062or\u0064er" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
+                buttonPanel.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing
+                . border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e" , javax. swing .border . TitledBorder
+                . CENTER ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .Font ( "Dialo\u0067", java .
+                awt . Font. BOLD ,12 ) ,java . awt. Color .red ) ,buttonPanel. getBorder () ) )
+                ; buttonPanel. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e
+                ) { if( "borde\u0072" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } )
+                ;
                 buttonPanel.setLayout(new MigLayout(
                     "hidemode 3",
                     // columns
@@ -102,7 +112,8 @@ public class MainScreen {
                     "[50,shrinkprio 50,sizegroup 1,fill]0" +
                     "[50,shrinkprio 50,sizegroup 1,fill]0" +
                     "[40,shrinkprio 50,sizegroup 1,fill]0" +
-                    "[shrinkprio 50,sizegroup 1]0" +
+                    "[40,shrinkprio 50]0" +
+                    "[50,shrinkprio 50,sizegroup 1]0" +
                     "[190,growprio 60,grow,fill]0"));
 
                 //---- btnDashboard ----
@@ -128,6 +139,12 @@ public class MainScreen {
                 btnDevAddPatron.setBackground(new Color(255, 102, 0));
                 btnDevAddPatron.addActionListener(e -> btnDevAddPatronActionPerformed(e));
                 buttonPanel.add(btnDevAddPatron, "cell 0 4");
+
+                //---- btnDevAddDonation ----
+                btnDevAddDonation.setText("DEV - Add Donation");
+                btnDevAddDonation.setBackground(new Color(255, 102, 0));
+                btnDevAddDonation.addActionListener(e -> btnDevAddDonationActionPerformed(e));
+                buttonPanel.add(btnDevAddDonation, "cell 0 5");
             }
             mainPanelContentPane.add(buttonPanel, "cell 0 0");
 
@@ -151,7 +168,7 @@ public class MainScreen {
         patronScreen = new PatronScreen(contentPanel.getSize());
         contentPanel.add(patronScreen, "patronScreenCard");
 
-        DonationScreen donationScreen = new DonationScreen(contentPanel.getSize());
+        donationScreen = new DonationScreen(contentPanel.getSize());
         contentPanel.add(donationScreen, "donationScreenCard");
 
 
@@ -194,6 +211,7 @@ public class MainScreen {
     private JButton btnPatrons;
     private JButton btnDonations;
     private JButton btnDevAddPatron;
+    private JButton btnDevAddDonation;
     private JPanel contentPanel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
