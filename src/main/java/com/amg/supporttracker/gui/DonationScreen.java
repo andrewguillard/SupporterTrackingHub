@@ -5,6 +5,7 @@
 package com.amg.supporttracker.gui;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import com.amg.supporttracker.gui.util.*;
@@ -24,7 +25,6 @@ public class DonationScreen extends JPanel {
         this.headers = generateHeaders();
         initComponents();
         this.setSize(dim);
-        textField1.setText("Donation");
 
         loadUI();
     }
@@ -39,10 +39,9 @@ public class DonationScreen extends JPanel {
         this.loadedDonations = XMLParser.readDonationsFile();
     }
 
-    //TODO: Make an XML Parser to just add a patron. Not search through all of them.
-    public void addPatron(DonationDTO donation){
+    public void addDonation(DonationDTO donation){
         loadedDonations.add(donation);
-        //insertPatronToTable(donation);
+        //donationTable.addTableRow(donation, false);
         saveData(loadedDonations);
     }
 
@@ -63,27 +62,31 @@ public class DonationScreen extends JPanel {
         return headers;
     }
 
+    private void btnAddDonationActionPerformed(ActionEvent e) {
+        System.out.println("Adding a donation.");
+        AddDonation addDonation = new AddDonation(this);
+        addDonation.setVisible(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Andrew Guillard
         panel1 = new JPanel();
-        textField1 = new JTextField();
         donarionScrollPane = new JScrollPane();
         donationTable = new STTable(null, this.headers);
+        btnAddDonation = new JButton();
 
         //======== this ========
-        setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border
-        . EmptyBorder( 0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax. swing. border. TitledBorder. CENTER, javax
-        . swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,
-        12 ), java. awt. Color. red) , getBorder( )) );  addPropertyChangeListener (new java. beans
-        . PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("borde\u0072" .equals (e .
-        getPropertyName () )) throw new RuntimeException( ); }} );
+        setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border
+        .EmptyBorder ( 0, 0 ,0 , 0) ,  "JFor\u006dDesi\u0067ner \u0045valu\u0061tion" , javax. swing .border . TitledBorder. CENTER ,javax
+        . swing. border .TitledBorder . BOTTOM, new java. awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,
+        12 ) ,java . awt. Color .red ) , getBorder () ) );  addPropertyChangeListener( new java. beans
+        .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( "bord\u0065r" .equals ( e.
+        getPropertyName () ) )throw new RuntimeException( ) ;} } );
         setLayout(new MigLayout(
             "insets 0,hidemode 3,gap 0 0",
             // columns
-            "[fill]" +
-            "[grow,fill]" +
-            "[fill]",
+            "[grow,fill]",
             // rows
             "[60,fill]" +
             "[294,grow]" +
@@ -97,26 +100,27 @@ public class DonationScreen extends JPanel {
                 "[236,grow,fill]",
                 // rows
                 "[]"));
-
-            //---- textField1 ----
-            textField1.setText("Hello Darkness my old friend.");
-            panel1.add(textField1, "cell 0 0");
         }
-        add(panel1, "cell 1 0");
+        add(panel1, "cell 0 0");
 
         //======== donarionScrollPane ========
         {
             donarionScrollPane.setViewportView(donationTable);
         }
-        add(donarionScrollPane, "cell 1 1");
+        add(donarionScrollPane, "cell 0 1");
+
+        //---- btnAddDonation ----
+        btnAddDonation.setText("Add Donation");
+        btnAddDonation.addActionListener(e -> btnAddDonationActionPerformed(e));
+        add(btnAddDonation, "cell 0 2");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Andrew Guillard
     private JPanel panel1;
-    private JTextField textField1;
     private JScrollPane donarionScrollPane;
     private STTable donationTable;
+    private JButton btnAddDonation;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -34,7 +34,6 @@ public class STTable extends JTable {
         
         //Set default sort
         this.activeSort = new ArrayList<>();
-        activeSort.add("+patronName");
 
         setTableData(data);
 

@@ -38,7 +38,7 @@ public class AddDonation extends JDialog {
         donation.setDonationDate(STUtil.formatStringToDate(txtDonationDate.getText(), STStandard.XML_DATE_FORMAT));
         donation.setSource(cboSource.getSelectedItem().toString());
         
-        donationScreen.addPatron(donation);
+        donationScreen.addDonation(donation);
         dispose();
     }
 
