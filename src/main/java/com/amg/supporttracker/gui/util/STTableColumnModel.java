@@ -1,5 +1,6 @@
 package com.amg.supporttracker.gui.util;
 
+import javax.crypto.spec.PSource;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 
 public class STTableColumnModel extends DefaultTableColumnModel {
 
-    ArrayList<STHeaderData> headers;
-    ArrayList<STHeaderData> sortHeaders;
+    private ArrayList<STHeaderData> headers;
+    private ArrayList<STHeaderData> sortHeaders;
 
     public STTableColumnModel(){
         super();
@@ -19,7 +20,8 @@ public class STTableColumnModel extends DefaultTableColumnModel {
 
     public STTableColumnModel(ArrayList<STHeaderData> headers){
         super();
-        this.headers = headers;
+        this.headers = new ArrayList<>();
+        this.headers.addAll(headers);
     }
 
     //TODO: Create DEBUG logger (and INFO) to handle some of these logs.
@@ -28,9 +30,11 @@ public class STTableColumnModel extends DefaultTableColumnModel {
         if(columnIndex != newIndex) {
             System.out.println("Column Moved! New pos: " + newIndex);
             shiftHeaders(columnIndex, newIndex);
-            System.out.println("First 3 = "+headers.get(0).getProperty()+" - "+headers.get(1).getProperty()+" - "+headers.get(2).getProperty());
-        }
 
+//            for(STHeaderData header : headers){
+//                System.out.println("Header: "+header.getDisplay());
+//            }
+        }
         //Actually does the column moving animation
         super.moveColumn(columnIndex, newIndex);
     }

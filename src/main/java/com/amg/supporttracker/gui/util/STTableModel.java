@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class STTableModel extends DefaultTableModel {
 
-    private ArrayList<?> tableData;
+    private ArrayList<Object> tableData;
     private ArrayList<STHeaderData> tableHeaders;
 
     public STTableModel(ArrayList<?> data, ArrayList<STHeaderData> headers) {
@@ -14,8 +14,10 @@ public class STTableModel extends DefaultTableModel {
         if(data == null){
             data = new ArrayList<>();
         }
-        this.tableData = data;
-        this.tableHeaders = headers;
+        this.tableData = new ArrayList<>();
+        this.tableData.addAll(data);
+        this.tableHeaders = new ArrayList<>();
+        this.tableHeaders.addAll(headers);
         setTableData(tableData, tableHeaders);
     }
 

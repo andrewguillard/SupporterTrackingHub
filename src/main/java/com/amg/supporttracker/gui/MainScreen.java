@@ -7,11 +7,11 @@ package com.amg.supporttracker.gui;
 import java.awt.event.*;
 import com.amg.supporttracker.gui.util.*;
 
-import com.amg.supporttracker.gui.util.STStandard;
 import com.amg.supporttracker.gui.util.dto.PatronDTO;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -20,15 +20,23 @@ import javax.swing.border.Border;
  */
 public class MainScreen {
 
-    CardLayout cardLayout;
-    PatronScreen patronScreen;
+    private CardLayout cardLayout;
+    private PatronScreen patronScreen;
+    private DonationScreen donationScreen;
+    private ArrayList<STLookAndFeel> looksAndFeels;
+    private STLookAndFeel activeLookAndFeel;
     
     public MainScreen() {
         initComponents();
         initContentPanel();
+        
+        //Set up look and feel stuff
+        this.looksAndFeels = STUtil.initLookAndFeel();
+        this.activeLookAndFeel = STUtil.getLookAndFeel(looksAndFeels, "DEFAULT");
         setColors();
+        
         mainPanel.setVisible(true);
-        mainPanel.setSize(new Dimension(800,500));
+        mainPanel.setSize(new Dimension(1000,600));
         mainPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         PatronDTO test = new PatronDTO();
@@ -165,37 +173,52 @@ public class MainScreen {
         patronScreen = new PatronScreen(contentPanel.getSize());
         contentPanel.add(patronScreen, "patronScreenCard");
 
-        DonationScreen donationScreen = new DonationScreen(contentPanel.getSize());
+        donationScreen = new DonationScreen(contentPanel.getSize());
         contentPanel.add(donationScreen, "donationScreenCard");
 
 
     }
 
     private void setColors(){
+        
+        //TODO: Let user's settings persist instead of just loading default every time
+        STLookAndFeel lf = activeLookAndFeel;
+        
         //Set Button Panel Color
-        buttonPanel.setBackground(new Color(250,126,0));
+        buttonPanel.setBackground(lf.getPrimaryColor());
         Border emptyBorder = BorderFactory.createEmptyBorder();
 
         //Set Button Colors
-        btnDashboard.setBackground(STStandard.LF_DEFAULT_SIDEBAR_BTN);
-        btnDashboard.setForeground(STStandard.LF_DEFAULT_SIDEBAR_BTN_TEXT);
+        btnDashboard.setBackground(lf.getPrimaryColor());
+        btnDashboard.setForeground(lf.getSecondaryColor());
+        btnDashboard.setFont(lf.getLargeFontBold());
         btnDashboard.setBorder(emptyBorder);
 
-        btnPatrons.setBackground(STStandard.LF_DEFAULT_SIDEBAR_BTN);
-        btnPatrons.setForeground(STStandard.LF_DEFAULT_SIDEBAR_BTN_TEXT);
+        btnPatrons.setBackground(lf.getPrimaryColor());
+        btnPatrons.setForeground(lf.getSecondaryColor());
+        btnPatrons.setFont(lf.getLargeFontBold());
         btnPatrons.setBorder(emptyBorder);
+        
 
-        btnDonations.setBackground(STStandard.LF_DEFAULT_SIDEBAR_BTN);
-        btnDonations.setForeground(STStandard.LF_DEFAULT_SIDEBAR_BTN_TEXT);
+        btnDonations.setBackground(lf.getPrimaryColor());
+        btnDonations.setForeground(lf.getSecondaryColor());
+        btnDonations.setFont(lf.getLargeFontBold());
         btnDonations.setBorder(emptyBorder);
-
-        patronScreen.setBackground(new Color(77,77,77));
-        mainPanel.setBackground(new Color(77,77,77));
-        //exitPanel.setBackground(new Color(0,0,0));
-
-
-
-        contentPanel.setBackground(new Color(77,77,77));
+        
+        patronScreen.setLookAndFeel(activeLookAndFeel);
+        donationScreen.setLookAndFeel(activeLookAndFeel);
+        
+        
+        
+        //contentPanel.setBackground(new Color(77,77,77));
+    }
+    
+    public STLookAndFeel getActiveLookAndFeel(){
+        return activeLookAndFeel;
+    }
+    
+    public void setActiveLookAndFeel(STLookAndFeel lf){
+        this.activeLookAndFeel = lf;
     }
     
     

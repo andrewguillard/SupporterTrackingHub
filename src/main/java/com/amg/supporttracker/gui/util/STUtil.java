@@ -1,23 +1,21 @@
 package com.amg.supporttracker.gui.util;
 
+import java.awt.*;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 public class STUtil {
     
-    
-    
-    
-    public static void setLookAndFeel() {
-        
-    }
+    private STLookAndFeel defaultLF;
 
     public static String formatDateToString(Date date, String format){
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
@@ -79,6 +77,48 @@ public class STUtil {
             iae.printStackTrace();
         } catch(InvocationTargetException ite){
             ite.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static ArrayList<STLookAndFeel> initLookAndFeel(){
+        //Create the looks and feels of the app. These might eventually go in an XML.
+        ArrayList<STLookAndFeel> looksAndFeels = new ArrayList<>();
+        
+        //DEFAULT
+        STLookAndFeel defaultLF = new STLookAndFeel("DEFAULT");
+        defaultLF.setPrimaryColor(new Color(92, 0, 5));
+        defaultLF.setSecondaryColor(new Color(255, 255, 255));
+        defaultLF.setBackgroundColor(new Color(33, 33, 33));
+        defaultLF.setHighlightColor(new Color(164, 235, 225));
+        defaultLF.setAffirmativeColor(new Color(201, 93, 93));
+        defaultLF.setNegativeColor(new Color(93, 201, 142));
+        
+        defaultLF.setPatreonPrimaryColor(new Color(240, 118, 84));
+        defaultLF.setPatreonSecondaryColor(new Color(255, 255, 255));
+        defaultLF.setPatreonBackgroundColor(new Color(30, 32, 48));
+        
+        defaultLF.setStreamlabsPrimaryColor(new Color(93, 201, 142));
+        defaultLF.setStreamlabsSecondaryColor(new Color(255, 255, 255));
+        defaultLF.setStreamlabsBackgroundColor(new Color(33, 33, 33));
+        
+        defaultLF.setLargeFontBold(new Font("TimesRoman", Font.BOLD, 16));
+        defaultLF.setLargeFontPlain(new Font("TimesRoman", Font.PLAIN, 16));
+        defaultLF.setSmallFontBold(new Font("TimesRoman", Font.BOLD, 12));
+        defaultLF.setSmallFontPlain(new Font("TimesRoman", Font.PLAIN, 12));
+        
+        looksAndFeels.add(defaultLF);
+        //LF #2
+        
+        
+        return looksAndFeels;
+    }
+    
+    public static STLookAndFeel getLookAndFeel(ArrayList<STLookAndFeel> lfs, String id){
+        for(STLookAndFeel lf : lfs){
+            if(lf.getIdentifier().equals(id)){
+                return lf;
+            }
         }
         return null;
     }

@@ -15,7 +15,6 @@ public class STTable extends JTable {
     private STTable table;
     private ArrayList<?> allData;
     private ArrayList<?> tableData;
-    private ArrayList<String> activeSort;
     private STTableColumnModel columnModel;
     private STTableModel tableModel;
     private String filter;
@@ -71,7 +70,10 @@ public class STTable extends JTable {
     //Refresh the table by removing the existing one and rebuilding
     public void refreshTable(){
         //Refresh the headers to be sure we have the right ones.
-        ArrayList<STHeaderData> headers = columnModel.getHeaders();
+        ArrayList<STHeaderData> headers = ((STTableColumnModel)table.getColumnModel()).getHeaders();
+//        for(STHeaderData header : headers){
+//            System.out.println("SORTING Header: "+ header.getDisplay());
+//        }
         if(headers == null){
             return;
         }
@@ -83,25 +85,7 @@ public class STTable extends JTable {
         for(STHeaderData header : headers){
             newModel.addColumn(header.getDisplay());
         }
-        
-//        //Rebuild the table.
-//        Object[] rowData;
-//        if(tableData != null && tableData.size() > 0) {
-//            for (Object row : tableData) {
-//                rowData = new Object[headers.size()];
-//                for (int i = 0; i < headers.size(); i++) {
-//                    try {
-//                        System.out.println("[" + i + "] Attempting to get data from get" + headers.get(i).getProperty() + "String()");
-//                        rowData[i] = STUtil.invokeGetter(row, headers.get(i).getProperty(), "String");
-//                    }
-//                    catch (Exception e) {
-//                        System.out.println("ERROR: Exception while building rowData.");
-//                        e.printStackTrace();
-//                    }
-//                }
-//                newModel.addRow(rowData);
-//            }
-//        }
+
         this.setModel(newModel);
     }
     
@@ -139,47 +123,6 @@ public class STTable extends JTable {
     public ArrayList<STHeaderData> getHeaders() {
         return ((STTableColumnModel)this.getColumnModel()).getHeaders();
     }
-
-//    //Test the sorting algorithm
-//    public void testSorter(){
-//        PatronDTO t1 = new PatronDTO(1, "Andrew", 4, 50.0, new Date());
-//        PatronDTO t2 = new PatronDTO(2, "Joe", 2, 30.0, new Date());
-//        PatronDTO t3 = new PatronDTO(3, "Bob", 2, 40.20, new Date());
-//        PatronDTO t4 = new PatronDTO(4, "Alex", 3, 540.0, new Date());
-//        PatronDTO t5 = new PatronDTO(5, "Momo", 1, 1.0, new Date());
-//        PatronDTO t6 = new PatronDTO(6, "Gers", 1, 17.0, new Date());
-//        PatronDTO t7 = new PatronDTO(7, "Simon", 1, 52.0, new Date());
-//        PatronDTO t8 = new PatronDTO(8, "Garfunkle", 4, 320.0, new Date());
-//        PatronDTO t9 = new PatronDTO(9, "googo", 1, 7.0, new Date());
-//        PatronDTO t10 = new PatronDTO(10, "Picaso", 3, 80.0, new Date());
-//        PatronDTO t11 = new PatronDTO(11, "Andrew", 1, 80.0, new Date());
-//        PatronDTO t12 = new PatronDTO(12, "Picaso", 4, 80.0, new Date());
-//        PatronDTO t13 = new PatronDTO(13, "Andrew", 2, 80.0, new Date());
-//        ArrayList<Object> testPatrons = new ArrayList<>();
-//        testPatrons.add(t1);
-//        testPatrons.add(t2);
-//        testPatrons.add(t3);
-//        testPatrons.add(t4);
-//        testPatrons.add(t5);
-//        testPatrons.add(t6);
-//        testPatrons.add(t7);
-//        testPatrons.add(t8);
-//        testPatrons.add(t9);
-//        testPatrons.add(t10);
-//        testPatrons.add(t11);
-//        testPatrons.add(t12);
-//        testPatrons.add(t13);
-//        ArrayList<String> testSort = new ArrayList<>();
-//        //testSort.add("-patronName");
-//        testSort.add("+tierNum");
-//        System.out.println("Testing Sort");
-//        testPatrons = sortAll(testPatrons, testSort);
-//        setTableData(testPatrons);
-//
-//        for(Object pat : testPatrons){
-//            System.out.println("Name: "+((PatronDTO)pat).getPatronNameString()+" Tier: "+((PatronDTO)pat).getTierNumString());
-//        }
-//    }
     
     //Use quicksort to sort a DTO by multiple parameters
     public ArrayList<?> sortAll(ArrayList<?> data, ArrayList<String> sortParams){

@@ -67,22 +67,47 @@ public class DonationScreen extends JPanel {
         addDonation.setVisible(true);
     }
 
+    public STTable getDonationTable() {
+        return donationTable;
+    }
+
+    public void setLookAndFeel(STLookAndFeel lookAndFeel){
+        this.setBackground(lookAndFeel.getStreamlabsBackgroundColor());
+        donationTopPanel.setBackground(lookAndFeel.getStreamlabsBackgroundColor());
+        btnStreamLabsIntegration.setBackground(lookAndFeel.getStreamlabsPrimaryColor());
+        btnStreamLabsIntegration.setForeground(lookAndFeel.getStreamlabsSecondaryColor());
+        btnStreamLabsIntegration.setFont(lookAndFeel.getLargeFontBold());
+
+        donationScrollPane.setBackground(lookAndFeel.getStreamlabsBackgroundColor());
+        getDonationTable().setBackground(lookAndFeel.getStreamlabsBackgroundColor());
+        getDonationTable().setForeground(lookAndFeel.getStreamlabsSecondaryColor());
+        getDonationTable().setFont(lookAndFeel.getSmallFontPlain());
+        getDonationTable().getTableHeader().setBackground(lookAndFeel.getStreamlabsPrimaryColor());
+        getDonationTable().getTableHeader().setForeground(lookAndFeel.getStreamlabsSecondaryColor());
+        getDonationTable().getTableHeader().setFont(lookAndFeel.getSmallFontBold());
+
+        btnAddDonation.setBackground(lookAndFeel.getStreamlabsPrimaryColor());
+        btnAddDonation.setForeground(lookAndFeel.getStreamlabsSecondaryColor());
+        btnAddDonation.setFont(lookAndFeel.getLargeFontBold());
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Andrew Guillard
-        panel1 = new JPanel();
+        donationTopPanel = new JPanel();
         btnStreamLabsIntegration = new JButton();
-        donarionScrollPane = new JScrollPane();
+        donationScrollPane = new JScrollPane();
         donationTable = new STTable(null, this.headers);
         btnAddDonation = new JButton();
 
         //======== this ========
-        setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder
-        ( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border
-        . TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt
-        . Color. red) , getBorder( )) );  addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void
-        propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( )
-        ; }} );
+        setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder
+        (0,0,0,0), "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn",javax.swing.border.TitledBorder.CENTER,javax.swing.border
+        .TitledBorder.BOTTOM,new java.awt.Font("Dia\u006cog",java.awt.Font.BOLD,12),java.awt
+        .Color.red), getBorder())); addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void
+        propertyChange(java.beans.PropertyChangeEvent e){if("\u0062ord\u0065r".equals(e.getPropertyName()))throw new RuntimeException()
+        ;}});
         setLayout(new MigLayout(
             "insets 0,hidemode 3,gap 0 0",
             // columns
@@ -92,9 +117,9 @@ public class DonationScreen extends JPanel {
             "[294,grow]" +
             "[]"));
 
-        //======== panel1 ========
+        //======== donationTopPanel ========
         {
-            panel1.setLayout(new MigLayout(
+            donationTopPanel.setLayout(new MigLayout(
                 "hidemode 3",
                 // columns
                 "[fill]" +
@@ -104,15 +129,15 @@ public class DonationScreen extends JPanel {
 
             //---- btnStreamLabsIntegration ----
             btnStreamLabsIntegration.setText("Connect to StreamLabs");
-            panel1.add(btnStreamLabsIntegration, "cell 0 0");
+            donationTopPanel.add(btnStreamLabsIntegration, "cell 0 0");
         }
-        add(panel1, "cell 0 0");
+        add(donationTopPanel, "cell 0 0");
 
-        //======== donarionScrollPane ========
+        //======== donationScrollPane ========
         {
-            donarionScrollPane.setViewportView(donationTable);
+            donationScrollPane.setViewportView(donationTable);
         }
-        add(donarionScrollPane, "cell 0 1");
+        add(donationScrollPane, "cell 0 1");
 
         //---- btnAddDonation ----
         btnAddDonation.setText("Add Donation");
@@ -123,9 +148,9 @@ public class DonationScreen extends JPanel {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Andrew Guillard
-    private JPanel panel1;
+    private JPanel donationTopPanel;
     private JButton btnStreamLabsIntegration;
-    private JScrollPane donarionScrollPane;
+    private JScrollPane donationScrollPane;
     private STTable donationTable;
     private JButton btnAddDonation;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

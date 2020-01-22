@@ -14,7 +14,7 @@ new FormModel {
 				"$columnConstraints": "[fill][236,grow,fill]"
 				"$rowConstraints": "[]"
 			} ) {
-				name: "panel1"
+				name: "donationTopPanel"
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnStreamLabsIntegration"
 					"text": "Connect to StreamLabs"
@@ -25,7 +25,7 @@ new FormModel {
 				"value": "cell 0 0"
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "donarionScrollPane"
+				name: "donationScrollPane"
 				add( new FormComponent( "com.amg.supporttracker.gui.util.STTable" ) {
 					name: "donationTable"
 					auxiliary() {

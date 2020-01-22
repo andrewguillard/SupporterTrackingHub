@@ -88,6 +88,36 @@ public class PatronScreen extends JPanel {
         addPatron.setVisible(true);
     }
 
+    public STTable getPatronTable() {
+        return patronTable;
+    }
+    
+    public void setLookAndFeel(STLookAndFeel lookAndFeel){
+        this.setBackground(lookAndFeel.getPatreonBackgroundColor());
+        patronTopPanel.setBackground(lookAndFeel.getPatreonBackgroundColor());
+        btnPatreonIntegration.setBackground(lookAndFeel.getPatreonPrimaryColor());
+        btnPatreonIntegration.setForeground(lookAndFeel.getPatreonSecondaryColor());
+        btnPatreonIntegration.setFont(lookAndFeel.getLargeFontBold());
+        
+        lblPatronFilters.setForeground(lookAndFeel.getPatreonSecondaryColor());
+        cboPatronFilter.setBackground(lookAndFeel.getPatreonPrimaryColor());
+        cboPatronFilter.setForeground(lookAndFeel.getPatreonSecondaryColor());
+        cboPatronFilter.setFont(lookAndFeel.getSmallFontBold());
+            
+        patronScrollPane.setBackground(lookAndFeel.getPatreonBackgroundColor());
+        getPatronTable().setBackground(lookAndFeel.getPatreonBackgroundColor());
+        getPatronTable().setForeground(lookAndFeel.getPatreonSecondaryColor());
+        getPatronTable().setFont(lookAndFeel.getSmallFontPlain());
+        getPatronTable().getTableHeader().setBackground(lookAndFeel.getPatreonPrimaryColor());
+        getPatronTable().getTableHeader().setForeground(lookAndFeel.getPatreonSecondaryColor());
+        getPatronTable().getTableHeader().setFont(lookAndFeel.getSmallFontBold());
+        
+        btnAddPatron.setBackground(lookAndFeel.getPatreonPrimaryColor());
+        btnAddPatron.setForeground(lookAndFeel.getPatreonSecondaryColor());
+        btnAddPatron.setFont(lookAndFeel.getLargeFontBold());
+        
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Andrew Guillard
