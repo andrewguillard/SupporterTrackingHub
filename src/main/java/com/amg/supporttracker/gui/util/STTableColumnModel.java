@@ -61,9 +61,11 @@ public class STTableColumnModel extends DefaultTableColumnModel {
 
     //Remove all other sorts and set this header as the only sort
     public void setSort(int col){
-        //GO through current sorts and set their sort symbol to ""
-        for(STHeaderData header : sortHeaders){
-            header.resetSort();
+        if(sortHeaders != null) {
+            //GO through current sorts and set their sort symbol to ""
+            for (STHeaderData header : sortHeaders) {
+                header.resetSort();
+            }
         }
         sortHeaders = new ArrayList<>();
         headers.get(col).setSort();

@@ -41,7 +41,7 @@ public class STTableModel extends DefaultTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object row = tableData.get(rowIndex);
-        return STUtil.invokeGetter(row, tableHeaders.get(columnIndex).getProperty(), "");
+        return STUtil.invokeGetter(row, tableHeaders.get(columnIndex).getProperty(), "String");
     }
 
     @Override

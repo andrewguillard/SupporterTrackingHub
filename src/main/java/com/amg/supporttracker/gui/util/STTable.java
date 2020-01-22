@@ -28,21 +28,15 @@ public class STTable extends JTable {
         super(new Object[1][], headers.stream().map(e -> e.getDisplay()).toArray());
         this.table = this;
         initTableComponents(data, headers);
-        
-        //Set the filter
-        this.filter = "all";
-        
-        //Set default sort
-        this.activeSort = new ArrayList<>();
-
+        columnModel.setSort(0);
+        if(data != null && data.get(0) instanceof PatronDTO){
+            //Set the filter
+            this.filter = "active";
+        }
         setTableData(data);
 
         //table.setDefaultRenderer(String.class, new STTableRenderer());
-
         initListeners();
-        
-        //testSorter();
-        //replace data
     }
     
     private void initTableComponents(ArrayList<Object> data, ArrayList<STHeaderData> headers){
@@ -111,21 +105,21 @@ public class STTable extends JTable {
         this.setModel(newModel);
     }
     
-    //Adds a new row to the table. If isSort, add it into the correct spot in the table.
-    public void addTableRow(Object newRow, boolean isSort){
+    //Adds a new row to the table. (This could be more efficient by just adding the row directly into tableData if it fits)
+    public void addTableRow(Object newRow){
         ((ArrayList<Object>) allData).add(newRow);
-
-        String status = (String) STUtil.invokeGetter(newRow, "status", "String");
-        if(status != null && status.equals(filter)){
-            ((ArrayList<Object>) tableData).add(newRow);
-        }
-
-        refreshTable();
+        setTableData(allData);
     }
     
+    public void addTableRows(ArrayList<?> newRows){
+        ((ArrayList<Object>) allData).addAll(newRows);
+        setTableData(allData);
+    }
+    
+    //Sets all data and then builds table data from that.
     public void setTableData(ArrayList<?> data){
         this.allData = data;
-        this.tableData = sortAll(filterData(allData, filter), activeSort);
+        this.tableData = sortAll(filterData(allData, filter), columnModel.getSorts());
         refreshTable();
     }
 
@@ -189,7 +183,7 @@ public class STTable extends JTable {
     
     //Use quicksort to sort a DTO by multiple parameters
     public ArrayList<?> sortAll(ArrayList<?> data, ArrayList<String> sortParams){
-        if(data == null || data.size() <= 1){
+        if(data == null || data.size() <= 1 || sortParams == null || sortParams.isEmpty()){
             return data;
         }
         int pivotPointer = data.size() / 2;
@@ -241,18 +235,17 @@ public class STTable extends JTable {
         return 0;
     }
 
+    //Set the filter and call setTableData on all of the data which will re-filter the data.
     public void doFilter(String filter){
-        doFilter(allData, filter);
-    }
-
-    public void doFilter(ArrayList<?> data, String filter){
-        this.filter = filter.toLowerCase();
-        tableData = filterData(data, this.filter);
-        refreshTable();
+        String oldFilter = this.filter;
+        this.filter = filter;
+        if(this.filter != null && !this.filter.equals(oldFilter)) {
+            setTableData(allData); // This will call filterData and sort on the data.
+        }
     }
 
     private ArrayList<?> filterData(ArrayList<?> data, String filter){
-        this.filter = filter.toLowerCase();
+        this.filter = filter != null ? filter.toLowerCase() : null;
 
         //If the filter is all, just return all of the data
         if(this.filter == null || this.filter.equals("all")){

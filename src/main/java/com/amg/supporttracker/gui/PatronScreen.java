@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import com.amg.supporttracker.gui.util.*;
 
 import com.amg.supporttracker.gui.util.STStandard;
@@ -54,10 +53,8 @@ public class PatronScreen extends JPanel {
 //        }
     }
     
-    //TODO: Make an XML Parser to just add a patron. Not search through all of them. 
     public void addPatron(PatronDTO patron){
-        loadedPatrons.add(patron);
-        insertPatronToTable(patron);
+        patronTable.addTableRow(patron);
         saveData(loadedPatrons);
     }
     
@@ -78,22 +75,6 @@ public class PatronScreen extends JPanel {
         headers.add(new STHeaderData("status", "Status"));
 
         return headers;
-    }
-
-    //Insert a patron (from PatronDTO) to the table
-    //TODO: Reimplement this function
-    public void insertPatronToTable(PatronDTO patron){
-//        tableModel.addRow(new Object[]{
-//                patron.getPatronName(),
-//                patron.getFriendlyName(),
-//                patron.getDiscordName(),
-//                patron.getTierNum(),
-//                STUtil.formatCurrency(patron.getPledgeAmount()),
-//                STUtil.formatCurrency(patron.getTotalAmount()),
-//                STUtil.formatDateToString(patron.getPledgeDate(), STStandard.TABLE_DATE_FORMAT),
-//                STUtil.formatDateToString(patron.getDeclineDate(), STStandard.TABLE_DATE_FORMAT),
-//                patron.getSource(),
-//        });
     }
 
     private void cboPatronFilterActionPerformed(ActionEvent e) {
