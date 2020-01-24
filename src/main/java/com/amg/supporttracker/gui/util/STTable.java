@@ -3,8 +3,10 @@ package com.amg.supporttracker.gui.util;
 import com.amg.supporttracker.gui.util.dto.PatronDTO;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -46,6 +48,16 @@ public class STTable extends JTable {
         //Create the table model (handles data)
         tableModel = new STTableModel(data, headers);
         table.setModel(tableModel);
+        
+        table.setRowHeight(25);
+        
+        //TODO: Put these in the screen's look and feel settings.
+        table.setGridColor(new Color(0,0,0));
+        //table.setShowGrid(false);
+        Border b = BorderFactory.createMatteBorder(0,0,2,0, new Color(0,0,0));
+        table.setBorder(b);
+        
+        table.getTableHeader().setBorder(b);
     }
 
     private void initListeners(){
