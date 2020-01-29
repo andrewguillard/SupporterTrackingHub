@@ -29,7 +29,6 @@ public class STTable extends JTable {
         super(new Object[1][], headers.stream().map(e -> e.getDisplay()).toArray());
         this.table = this;
         initTableComponents(data, headers);
-        columnModel.setSort(0);
         if(data != null && data.get(0) instanceof PatronDTO){
             //Set the filter
             this.filter = "active";
@@ -38,11 +37,13 @@ public class STTable extends JTable {
 
         //table.setDefaultRenderer(String.class, new STTableRenderer());
         initListeners();
+        initDefaultLookAndFeel();
     }
     
     private void initTableComponents(ArrayList<Object> data, ArrayList<STHeaderData> headers){
         //Create column model
         columnModel = new STTableColumnModel(headers);
+        columnModel.setSort(0);
         table.setColumnModel(columnModel);
         
         //Create the table model (handles data)
@@ -50,14 +51,6 @@ public class STTable extends JTable {
         table.setModel(tableModel);
         
         table.setRowHeight(25);
-        
-        //TODO: Put these in the screen's look and feel settings.
-        table.setGridColor(new Color(0,0,0));
-        //table.setShowGrid(false);
-        Border b = BorderFactory.createMatteBorder(0,0,2,0, new Color(0,0,0));
-        table.setBorder(b);
-        
-        table.getTableHeader().setBorder(b);
     }
 
     private void initListeners(){
@@ -77,6 +70,15 @@ public class STTable extends JTable {
                 super.mouseClicked(e);
             }
         });
+    }
+    
+    private void initDefaultLookAndFeel(){
+        table.setGridColor(new Color(0,0,0));
+        //table.setShowGrid(false);
+        Border b = BorderFactory.createMatteBorder(0,0,2,0, new Color(0,0,0));
+        table.setBorder(b);
+
+        table.getTableHeader().setBorder(b);
     }
     
     //Refresh the table by removing the existing one and rebuilding

@@ -16,8 +16,9 @@ new FormModel {
 			} ) {
 				name: "patronTopPanel"
 				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "btnPatreonIntegration"
+					name: "btnConnectPatreon"
 					"text": "Connect to Patreon"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnConnectPatreonActionPerformed", true ) )
 				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 					"value": "cell 0 0"
 				} )
